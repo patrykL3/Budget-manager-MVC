@@ -27,12 +27,15 @@ class Registration extends \Core\Controller
  *
  * @return void
  */
-public function createAction()
-{
-    $user = new User($_POST);
+    public function createAction()
+    {
+        $user = new User($_POST);
 
-    $user->save();
-
-    View::renderTemplate('Registration/open.html');
-}
+        if ($user->save()) {
+            header('Location: http://' . $_SERVER['HTTP_HOST'] . '/login/open', true, 303);
+            exit;
+        } else {
+            View::renderTemplate('Registration/open.html', ['user' => $user]);
+        }
+    }
 }
