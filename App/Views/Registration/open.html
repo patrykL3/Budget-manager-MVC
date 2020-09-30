@@ -4,6 +4,82 @@
 {% block description %}Menadżer finansów dzięki któremu zapanujesz nad własnymi środkami pieniężnymi.{% endblock %}
 {% block keywords %}menadżer finansów, zarządzanie finansami, rejestracja{% endblock %}
 
+{% block footer %}
+
+<script>
+    /**
+     * Add jQuery Validation plugin method for a valid password
+     *
+     * Valid passwords contain at least one letter and one number.
+     */
+    $.validator.addMethod('validPassword',
+        function(value, element, param) {
+
+            if (value != '') {
+                if (value.match(/.*[a-z]+.*/i) == null) {
+                    return false;
+                }
+                if (value.match(/.*\d+.*/) == null) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+        'Must contain at least one letter and one number'
+    );
+
+    $(document).ready(function() {
+
+        /**
+         * Validate the form
+         */
+        $('#formRegistration').validate({
+            rules: {
+                login: {
+                    required: true,
+                    remote: '/account/validateLogin'
+                },
+                name: 'required',
+                surname: 'required',
+                email: {
+                    required: true,
+                    email: true,
+                    remote: '/Account/validateEmail'
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    validPassword: true
+                },
+                password_confirmation: {
+                    equalTo: '#inputPassword'
+                }
+            },
+            messages: {
+                login: {
+                    remote: 'Login jest zajęty.',
+                    required: 'Wprowadż login!',
+                },
+                name: 'Wprowadż imię!',
+                surname: 'Wprowadź nazwisko!',
+                email: {
+                    remote: 'Email jest zajęty.',
+                    required: 'Wprowadż email!',
+                    email: 'Wprowadż poprawny adres email.'
+                },
+                password: 'Hasło musi zawierać przynajmniej 6 znaków, jedną cyfrę oraz literę.',
+                password_confirmation: 'Hasło nie zostało powtórzone poprawnie.'
+            }
+        });
+    });
+</script>
+
+{% endblock %}
+
+
+
+
 {% block body %}
 <main>
     <div class="container">
@@ -16,7 +92,7 @@
         </header>
 
         <div class="row justify-content-center">
-            <form class="width-2 mt-4 mb-4" method="post" action="/Registration/create">
+            <form id="formRegistration" class="width-2 mt-4 mb-4" method="post" action="/Registration/create">
                 <div class="input-group mb-2 mr-sm-2">
                     <div class="input-group-prepend">
                         <div class="input-group-text">
@@ -75,7 +151,7 @@
                             </svg>
                         </div>
                     </div>
-                    <input type="password" class="form-control" placeholder="Hasło*" name="password" value="">
+                    <input id="inputPassword" type="password" class="form-control" placeholder="Hasło*" name="password" value="">
                 </div>
                 <div class="text-danger mb-2 w-100 text-5 ml-1">{{ user.errors['password'] }}</div>
 

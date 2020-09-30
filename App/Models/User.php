@@ -83,7 +83,7 @@ class User extends \Core\Model
         if ($this->login == '') {
             $this->errors['loginRequired'] = 'Wprowadź login!';
         }
-        if ($this->loginExists($this->login)) {
+        if (static::loginExists($this->login)) {
             $this->errors['loginTaken'] = 'Login jest zajęty';
         }
 
@@ -91,7 +91,7 @@ class User extends \Core\Model
         if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
             $this->errors['invalidEmail'] = 'Niepoprawny adres email';
         }
-        if ($this->emailExists($this->email)) {
+        if (static::emailExists($this->email)) {
             $this->errors['emailTaken'] = 'Adres email jest zajęty';
         }
 
@@ -112,7 +112,7 @@ class User extends \Core\Model
      *
      * @return boolean  True if a record already exists with the specified email, false otherwise
      */
-    protected function emailExists($email)
+    public static function emailExists($email)
     {
         $sql = 'SELECT * FROM users WHERE email = :email';
 
@@ -132,7 +132,7 @@ class User extends \Core\Model
      *
      * @return boolean  True if a record already exists with the specified login, false otherwise
      */
-    protected function loginExists($login)
+    public static function loginExists($login)
     {
         $sql = 'SELECT * FROM users WHERE login = :login';
 
