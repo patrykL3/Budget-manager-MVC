@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}BudgetManager- logowanie{% endblock %}
+{% block description %}Menadżer finansów dzięki któremu zapanujesz nad własnymi środkami pieniężnymi.{% endblock %}
+{% block keywords %}menadżer finansów, zarządzanie finansami, logowanie{% endblock %}
+
+
+{% block body %}
+<main>
+	<div class="container">
+		<header>
+			<div class="row justify-content-center pl-4 pr-4">
+				<div class="mt-4 portrait text-center width-2">
+					<h2 class="h4 text-white font-weight-bold pt-2 pb-1">Logowanie</h2>
+				</div>
+			</div>
+		</header>
+		<div class="row justify-content-center">
+			<form class="width-2 mt-4 mb-4" method="post" action="">
+				<div class="input-group mb-2 mr-sm-2">
+					<div class="input-group-prepend">
+						<div class="input-group-text">
+							<svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+							</svg>
+						</div>
+					</div>
+					<input type="text" class="form-control green" id="formInputGroupLogin" placeholder="Login" name="login" value="">
+				</div>
+				<div class="input-group mb-2 mr-sm-2">
+					<div class="input-group-prepend">
+						<div class="input-group-text">
+							<svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+								<path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z" />
+								<path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z" />
+							</svg>
+						</div>
+					</div>
+					<input type="password" class="form-control green" id="formInputGroupPassword" placeholder="Hasło" name="password">
+				</div>
+				<div class="form-check pl-4">
+					<input class="form-check-input" type="checkbox" name="remember_me" id="inlineFormCheck">
+					<label class="form-check-label" for="inlineFormCheck">
+						Zapamiętaj mnie
+					</label>
+				</div>
+
+				<button type="submit" class="btn btn-success btn-lg btn-block mt-3">
+					Zaloguj się
+					<svg width="1.2em" height="1.2em" viewBox="0 0 16 16" class="bi bi-box-arrow-in-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 0 1 0-.708L10.793 8 8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z" />
+						<path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 1 8z" />
+						<path fill-rule="evenodd"
+							d="M13.5 14.5A1.5 1.5 0 0 0 15 13V3a1.5 1.5 0 0 0-1.5-1.5h-8A1.5 1.5 0 0 0 4 3v1.5a.5.5 0 0 0 1 0V3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5h-8A.5.5 0 0 1 5 13v-1.5a.5.5 0 0 0-1 0V13a1.5 1.5 0 0 0 1.5 1.5h8z" />
+					</svg>
+				</button>
+			</form>
+		</div>
+	</div>
+</main>
+{% endblock %}
