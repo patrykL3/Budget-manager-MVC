@@ -19,6 +19,8 @@ class User extends \Core\Model
      */
     public $errors = [];
 
+    private static $database;
+
     /**
      * Class constructor
      *
@@ -28,6 +30,7 @@ class User extends \Core\Model
      */
     public function __construct($data)
     {
+        self::$database = static::getDB();
         foreach ($data as $key => $value) {
             $this->$key = $value;
         };
@@ -45,19 +48,22 @@ class User extends \Core\Model
         if (empty($this->errors)) {
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
 
-            $sql = 'INSERT INTO users (login, name, surname, email, password)
-                VALUES (:login, :name, :surname, :email, :password_hash)';
+            $this->addUser($password_hash);
+            $userLoggedId = $this->getUserId($this->login);
+            $idDefaultPaymentMethods = $this->getIdDefaultPaymentMethods();
+            $idDefaultExpenses = $this->getIdDefaultExpenses();
+            $idDefaultIncomes =  $this->getIdDefaultIncomes();
 
-            $db = static::getDB();
-            $stmt = $db->prepare($sql);
-
-            $stmt->bindValue(':login', $this->login, PDO::PARAM_STR);
-            $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
-            $stmt->bindValue(':surname', $this->surname, PDO::PARAM_STR);
-            $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-            $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-
-            return $stmt->execute();
+            foreach ($idDefaultPaymentMethods as $onceOfId) {
+                $this->addPaymentMethod($onceOfId['payment_category_id'], $userLoggedId['user_id']);
+            }
+            foreach ($idDefaultExpenses as $onceOfId) {
+                $this->addExpenseCategory($onceOfId['expense_category_id'], $userLoggedId['user_id']);
+            }
+            foreach ($idDefaultIncomes as $onceOfId) {
+                $this->addIncomeCategory($onceOfId['income_category_id'], $userLoggedId['user_id']);
+            }
+            return true;
         }
         return false;
     }
@@ -104,6 +110,72 @@ class User extends \Core\Model
         }
     }
 
+    protected function addUser($password_hash)
+    {
+        $sql = 'INSERT INTO users (login, name, surname, email, password)
+                VALUES (:login, :name, :surname, :email, :password_hash)';
+
+        $stmt = self::$database->prepare($sql);
+        $stmt->bindValue(':login', $this->login, PDO::PARAM_STR);
+        $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
+        $stmt->bindValue(':surname', $this->surname, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+        $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    private function getUserId($login)
+    {
+        $userIdQuery = self::$database->prepare('SELECT user_id FROM users WHERE login = :login');
+        $userIdQuery->bindValue(':login', $login, PDO::PARAM_STR);
+        $userIdQuery->execute();
+        return $userIdQuery->fetch();
+    }
+
+    private function getIdDefaultPaymentMethods()
+    {
+        $idNumbersDefaultPaymentMethodsQuery = self::$database->prepare('SELECT payment_category_id FROM payments_categories WHERE default_type = 1');
+        $idNumbersDefaultPaymentMethodsQuery->execute();
+        return $idNumbersDefaultPaymentMethodsQuery->fetchAll();
+    }
+
+    private function getIdDefaultExpenses()
+    {
+        $idNumbersDefaultExpensesQuery = self::$database->prepare('SELECT expense_category_id FROM expenses_categories WHERE default_type = 1');
+        $idNumbersDefaultExpensesQuery->execute();
+        return $idNumbersDefaultExpensesQuery->fetchAll();
+    }
+
+    private function getIdDefaultIncomes()
+    {
+        $idNumbersDefaultIncomesQuery = self::$database->prepare('SELECT income_category_id FROM incomes_categories WHERE default_type = 1');
+        $idNumbersDefaultIncomesQuery->execute();
+        return $idNumbersDefaultIncomesQuery->fetchAll();
+    }
+
+    private function addPaymentMethod($paymentMethodId, $userId)
+    {
+        $addPaymentMethodQuery = self::$database->prepare('INSERT INTO users_categories_payments VALUES (:user_id, :payment_category_id)');
+        $addPaymentMethodQuery->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $addPaymentMethodQuery->bindValue(':payment_category_id', $paymentMethodId, PDO::PARAM_INT);
+        $addPaymentMethodQuery->execute();
+    }
+
+    private function addExpenseCategory($expenseCategoryId, $userId)
+    {
+        $addExpenseQuery = self::$database->prepare('INSERT INTO users_categories_expenses VALUES (:user_id, :expense_category_id)');
+        $addExpenseQuery->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $addExpenseQuery->bindValue(':expense_category_id', $expenseCategoryId, PDO::PARAM_INT);
+        $addExpenseQuery->execute();
+    }
+
+    private function addIncomeCategory($incomeCategoryId, $userId)
+    {
+        $addIncomeQuery = self::$database->prepare('INSERT INTO users_categories_incomes VALUES (:user_id, :income_category_id)');
+        $addIncomeQuery->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $addIncomeQuery->bindValue(':income_category_id', $incomeCategoryId, PDO::PARAM_INT);
+        $addIncomeQuery->execute();
+    }
 
     /**
      * See if a user record already exists with the specified email
@@ -116,8 +188,8 @@ class User extends \Core\Model
     {
         $sql = 'SELECT * FROM users WHERE email = :email';
 
-        $db = static::getDB();
-        $stmt = $db->prepare($sql);
+        $database = static::getDB();
+        $stmt = $database->prepare($sql);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
 
         $stmt->execute();
@@ -136,8 +208,8 @@ class User extends \Core\Model
     {
         $sql = 'SELECT * FROM users WHERE login = :login';
 
-        $db = static::getDB();
-        $stmt = $db->prepare($sql);
+        $database = static::getDB();
+        $stmt = $database->prepare($sql);
         $stmt->bindParam(':login', $login, PDO::PARAM_STR);
 
         $stmt->execute();
