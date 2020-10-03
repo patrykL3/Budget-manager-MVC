@@ -32,7 +32,7 @@ class Registration extends \Core\Controller
         $user = new User($_POST);
 
         if ($user->save()) {
-            header('Location: http://' . $_SERVER['HTTP_HOST'] . '/login/open', true, 303);
+            header('Location: http://' . $_SERVER['HTTP_HOST'] . '/login', true, 303);
             exit;
         } else {
             View::renderTemplate('Registration/open.html', ['user' => $user]);
