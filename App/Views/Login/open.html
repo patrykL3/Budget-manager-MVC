@@ -16,7 +16,7 @@
 			</div>
 		</header>
 		<div class="row justify-content-center">
-			<form class="width-2 mt-4 mb-4" method="post" action="">
+			<form class="width-2 mt-4 mb-4" action="/login/create" method="post">
 				<div class="input-group mb-2 mr-sm-2">
 					<div class="input-group-prepend">
 						<div class="input-group-text">
@@ -25,7 +25,7 @@
 							</svg>
 						</div>
 					</div>
-					<input type="text" class="form-control green" id="formInputGroupLogin" placeholder="Login" name="login" value="">
+					<input type="text" class="form-control green" id="formInputGroupLogin" placeholder="Email lub login" name="email" value="{{ email }}" autofocus>
 				</div>
 				<div class="input-group mb-2 mr-sm-2">
 					<div class="input-group-prepend">
@@ -38,8 +38,9 @@
 					</div>
 					<input type="password" class="form-control green" id="formInputGroupPassword" placeholder="Hasło" name="password">
 				</div>
+
 				<div class="form-check pl-4">
-					<input class="form-check-input" type="checkbox" name="remember_me" id="inlineFormCheck">
+					<input class="form-check-input" type="checkbox" name="remember_me" id="inlineFormCheck" {% if remember_me %} checked="checked" {% endif %}>
 					<label class="form-check-label" for="inlineFormCheck">
 						Zapamiętaj mnie
 					</label>
@@ -55,6 +56,7 @@
 					</svg>
 				</button>
 			</form>
+			<div class="text-danger text-5 w-100 row justify-content-center">{{ dataIncorrect }}</div>
 		</div>
 	</div>
 </main>

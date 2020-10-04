@@ -28,7 +28,7 @@ class User extends \Core\Model
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data = [])
     {
         self::$database = static::getDB();
         foreach ($data as $key => $value) {
@@ -186,15 +186,7 @@ class User extends \Core\Model
      */
     public static function emailExists($email)
     {
-        $sql = 'SELECT * FROM users WHERE email = :email';
-
-        $database = static::getDB();
-        $stmt = $database->prepare($sql);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        return $stmt->fetch() !== false;
+        return static::findByEmail($email) !== false;
     }
 
     /**
@@ -215,5 +207,71 @@ class User extends \Core\Model
         $stmt->execute();
 
         return $stmt->fetch() !== false;
+    }
+
+    /**
+     * Find a user model by email address
+     *
+     * @param string $email email address to search for
+     *
+     * @return mixed User object if found, false otherwise
+     */
+    public static function findByEmail($email)
+    {
+        $sql = 'SELECT * FROM users WHERE email = :email';
+
+        $database = static::getDB();
+        $stmt = $database->prepare($sql);
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    /**
+ * Authenticate a user by email and password.
+ *
+ * @param string $email email address
+ * @param string $password password
+ *
+ * @return mixed  The user object or false if authentication fails
+ */
+    public static function authenticate($email, $password)
+    {
+        $user = static::findByEmail($email);
+
+        if ($user) {
+            if (password_verify($password, $user->password)) {
+                return $user;
+            }
+        }
+
+        $_SESSION['dataIncorrect'] = 'Nieporpawne dane.';
+        return false;
+    }
+
+    /**
+     * Find a user model by ID
+     *
+     * @param string $id The user ID
+     *
+     * @return mixed User object if found, false otherwise
+     */
+    public static function findByID($id)
+    {
+        $sql = 'SELECT * FROM users WHERE user_id = :id';
+        $database = static::getDB();
+
+        $stmt = $database->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetch();
     }
 }

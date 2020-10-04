@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use \App\Authentication;
+
 /**
  * Base controller
  *
@@ -69,5 +71,37 @@ abstract class Controller
      */
     protected function after()
     {
+    }
+
+    public function redirect($url)
+    {
+        header('Location: http://' . $_SERVER['HTTP_HOST'] . $url, true, 303);
+        exit;
+    }
+
+    /**
+ * Require the user to be logged in before giving access to the requested page.
+ * Remember the requested page for later, then redirect to the login page.
+ *
+ * @return void
+ */
+    public function requireLogin()
+    {
+        if (! Authentication::getLoggedUser()) {
+            $this->redirect('/');
+        }
+    }
+
+    /**
+ * Require the user to not be logged in before giving access to the requested page.
+ * Remember the requested page for later, then redirect to the menu page.
+ *
+ * @return void
+ */
+    public function requireLogout()
+    {
+        if (Authentication::getLoggedUser()) {
+            $this->redirect('/menu');
+        }
     }
 }

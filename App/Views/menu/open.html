@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}BudgetManager{% endblock %}
+{% block description %}Menadżer finansów dzięki któremu zapanujesz nad własnymi środkami pieniężnymi.{% endblock %}
+{% block keywords %}menadżer finansów, zarządzanie finansami, logowanie, rejestracja{% endblock %}
+
+
+
+{% block body %}
+
+    <h1>Welcome</h1>
+
+        User with ID {{ current_user.user_id }} is logged in. <a href="/logout">Log out</a>.
+
+{% endblock %}
