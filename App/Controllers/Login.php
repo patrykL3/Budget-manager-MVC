@@ -36,7 +36,7 @@ class Login extends Authentication_logout
         $remember_me = isset($_POST['remember_me']);
 
         if ($user) {
-            Authentication::login($user);
+            Authentication::login($user, $remember_me);
 
             $this->redirect('/menu');
 
