@@ -10,8 +10,9 @@ use \App\Models\User;
  *
  * PHP version 7.0
  */
-class Registration extends \Core\Controller
+class Registration extends Authentication_logout
 {
+
     /**
      * Show the Registration page
      *
@@ -32,7 +33,7 @@ class Registration extends \Core\Controller
         $user = new User($_POST);
 
         if ($user->save()) {
-            header('Location: http://' . $_SERVER['HTTP_HOST'] . '/login/open', true, 303);
+            $this->redirect('/login');
             exit;
         } else {
             View::renderTemplate('Registration/open.html', ['user' => $user]);
