@@ -35,6 +35,9 @@ $router->add('login', ['controller' => 'login', 'action' => 'open']);
 $router->add('logout', ['controller' => 'logout', 'action' => 'destroy']);
 $router->add('registration', ['controller' => 'registration', 'action' => 'open']);
 $router->add('menu', ['controller' => 'menu', 'action' => 'open']);
+$router->add('income', ['controller' => 'income', 'action' => 'open']);
+$router->add('expense', ['controller' => 'expense', 'action' => 'open']);
+$router->add('settings', ['controller' => 'settings', 'action' => 'open']);
 $router->add('{controller}/{action}');
 
 $router->dispatch($_SERVER['QUERY_STRING']);
