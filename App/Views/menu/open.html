@@ -1,15 +1,29 @@
-{% extends 'base.html' %}
+{% extends 'base-nav.html' %}
 
 {% block title %}BudgetManager{% endblock %}
 {% block description %}Menadżer finansów dzięki któremu zapanujesz nad własnymi środkami pieniężnymi.{% endblock %}
-{% block keywords %}menadżer finansów, zarządzanie finansami, logowanie, rejestracja{% endblock %}
+{% block keywords %}menadżer finansów, zarządzanie finansami, menu{% endblock %}
 
 
+{% block list_class_menu %}active{% endblock %}
+{% block link_class_menu %}stylish{% endblock %}
 
 {% block body %}
-
-    <h1>Welcome</h1>
-
-        User with ID {{ current_user.user_id }} is logged in. <a href="/logout">Log out</a>.
-
+<main>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-3 text-center">
+                <img class="img-thumbnail bg-light" src="img/kleyson.jpeg" alt="">
+            </div>
+            <div class="col-md-5 justify-content-center align-self-center">
+                <blockquote class="blockquote">
+                    <small class="text-justify">
+                        „Odkładajcie każdą część swoich zarobków, którą możecie odłożyć. Jeśli to konieczne, planujcie wydatki, byście mogli odkładać. Szybko zobaczycie, jak wspaniałym uczuciem jest mieć skarby, których pragniecie.”
+                    </small>
+                    <footer class="blockquote-footer mt-2"> George’a S. Clasona</footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}

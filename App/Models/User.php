@@ -45,25 +45,25 @@ class User extends \Core\Model
      */
     public function save()
     {
-        $this->validate();
+        $this->validateUserData();
 
         if (empty($this->errors)) {
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
 
             $this->addUser($password_hash);
-            $userLoggedId = $this->getUserId($this->login);
+            $idAddedUser = $this->getUserId($this->login);
             $idDefaultPaymentMethods = $this->getIdDefaultPaymentMethods();
             $idDefaultExpenses = $this->getIdDefaultExpenses();
             $idDefaultIncomes =  $this->getIdDefaultIncomes();
 
             foreach ($idDefaultPaymentMethods as $onceOfId) {
-                $this->addPaymentMethod($onceOfId['payment_category_id'], $userLoggedId['user_id']);
+                $this->addPaymentMethod($onceOfId['payment_category_id'], $idAddedUser['user_id']);
             }
             foreach ($idDefaultExpenses as $onceOfId) {
-                $this->addExpenseCategory($onceOfId['expense_category_id'], $userLoggedId['user_id']);
+                $this->addExpenseCategory($onceOfId['expense_category_id'], $idAddedUser['user_id']);
             }
             foreach ($idDefaultIncomes as $onceOfId) {
-                $this->addIncomeCategory($onceOfId['income_category_id'], $userLoggedId['user_id']);
+                $this->addIncomeCategory($onceOfId['income_category_id'], $idAddedUser['user_id']);
             }
             return true;
         }
@@ -75,7 +75,7 @@ class User extends \Core\Model
      *
      * @return void
      */
-    public function validate()
+    public function validateUserData()
     {
         // Name
         if ($this->name == '') {
