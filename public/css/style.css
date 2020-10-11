@@ -21,6 +21,15 @@ label.error {
     padding-bottom: 1px;
 }
 
+.alert-info {
+    background-color: #d9edf7;
+}
+.alert-success {
+    background-color: #dff0d8;
+}
+.alert-warning {
+    background-color: #fcf8e3;
+}
 
 .max-width {
     max-width: 450px;
