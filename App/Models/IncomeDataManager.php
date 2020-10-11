@@ -4,6 +4,7 @@ namespace App\Models;
 
 use PDO;
 use \App\Authentication;
+use \App\Date;
 
 /**
  * Income data manager
@@ -35,6 +36,7 @@ class IncomeDataManager extends \Core\Model
         $this->userIncomeCategories = $this->getUserIncomeCategories($this->loggedUser->user_id);
 
         foreach ($data as $key => $value) {
+            $value = filter_input(INPUT_POST, $key);
             $this->$key = $value;
         };
     }
@@ -71,26 +73,16 @@ class IncomeDataManager extends \Core\Model
         }
 
         // Date
-        $this->date = filter_input(INPUT_POST, 'date');
-        if (!$this->isRealDate($this->date)) {
+        if (!Date::isRealDate($this->date)) {
             $this->errors['dateRequired'] = 'Wprowadź poprawną datę!';
         }
 
         // Category
-        $this->category = filter_input(INPUT_POST, 'category');
-        if ($this->category == 'Wybierz kategorię') {
+        if ($this->category == 'Wybierz kategorię' || empty($this->category)) {
             $this->errors['categoryRequired'] = 'Wprowadź kategorię!';
         }
     }
 
-    private function isRealDate($date)
-    {
-        if (false === strtotime($date)) {
-            return false;
-        }
-        list($year, $month, $day) = explode('-', $date);
-        return checkdate($month, $day, $year);
-    }
 
     private function getSelectedCategoryId()
     {

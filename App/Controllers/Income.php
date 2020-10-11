@@ -5,7 +5,7 @@ namespace App\Controllers;
 use \Core\View;
 
 use \App\Models\IncomeDataManager;
-
+use \App\Flash;
 /**
  * Income controller
  *
@@ -39,6 +39,7 @@ class Income extends Authentication_login
     public function createAction()
     {
         if ($this->incomeDataManager->addIncome()) {
+            Flash::addMessage('Dodano nowy przychód');
             $this->redirect('/income');
             exit;
         } else {
