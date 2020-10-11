@@ -1,0 +1,142 @@
+{% extends 'base-nav.html' %}
+
+{% block title %}BudgetManager{% endblock %}
+{% block description %}Menadżer finansów dzięki któremu zapanujesz nad własnymi środkami pieniężnymi.{% endblock %}
+{% block keywords %}menadżer finansów, zarządzanie finansami, dodaj wydatek{% endblock %}
+
+
+{% block list_class_expense %}active{% endblock %}
+{% block link_class_expense %}stylish{% endblock %}
+
+
+{% block body %}
+<main>
+    <div class="container">
+        <header>
+            <div class="row justify-content-center pl-4 pr-4">
+                <div class="width-2 mt-4 portrait text-center">
+                    <h2 class="h4 text-white font-weight-bold pt-2 pb-1">Wprowadź dane:</h2>
+                </div>
+            </div>
+        </header>
+
+        <div class="row justify-content-center">
+            <form id="formExpense" class="width-2 mt-4 mb-4" method="post" action="/Expense/create">
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-pencil" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M11.293 1.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1 0 1.414l-9 9a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391l9-9zM12 2l2 2-9 9-3 1 1-3 9-9z" />
+                                <path fill-rule="evenodd" d="M12.146 6.354l-2.5-2.5.708-.708 2.5 2.5-.707.708zM3 10v.5a.5.5 0 0 0 .5.5H4v.5a.5.5 0 0 0 .5.5H5v.5a.5.5 0 0 0 .5.5H6v-1.5a.5.5 0 0 0-.5-.5H5v-.5a.5.5 0 0 0-.5-.5H3z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <input type="text" id="amount" class="form-control" placeholder="Kwota" name="amount" value="{{ data.amount }}" autofocus>
+                </div>
+                <div class="text-danger mb-2 w-100 text-5 ml-5 pl-2">{{ data.errors['amountRequired'] }}</div>
+
+
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-calendar-date-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM0 5h16v9a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5zm9.336 7.79c-1.11 0-1.656-.767-1.703-1.407h.683c.043.37.387.82 1.051.82.844 0 1.301-.848 1.305-2.164h-.027c-.153.414-.637.79-1.383.79-.852 0-1.676-.61-1.676-1.77 0-1.137.871-1.809 1.797-1.809 1.172 0 1.953.734 1.953 2.668 0 1.805-.742 2.871-2 2.871zm.066-2.544c.625 0 1.184-.484 1.184-1.18 0-.832-.527-1.23-1.16-1.23-.586 0-1.168.387-1.168 1.21 0 .817.543 1.2 1.144 1.2zm-2.957-2.89v5.332H5.77v-4.61h-.012c-.29.156-.883.52-1.258.777V8.16a12.6 12.6 0 0 1 1.313-.805h.632z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <input type="date" class="form-control" id="date-to-fill" name="date" value="{{ data.date }}">
+                </div>
+                <div class="text-danger mb-2 w-100 text-5 ml-5 pl-2">{{ data.errors['dateRequired'] }}</div>
+
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-box-arrow-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M4.354 11.354a.5.5 0 0 0 0-.708L1.707 8l2.647-2.646a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708 0z" />
+                                <path fill-rule="evenodd" d="M11.5 8a.5.5 0 0 0-.5-.5H2a.5.5 0 0 0 0 1h9a.5.5 0 0 0 .5-.5z" />
+                                <path fill-rule="evenodd"
+                                    d="M14 13.5a1.5 1.5 0 0 0 1.5-1.5V4A1.5 1.5 0 0 0 14 2.5H7A1.5 1.5 0 0 0 5.5 4v1.5a.5.5 0 0 0 1 0V4a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5H7a.5.5 0 0 1-.5-.5v-1.5a.5.5 0 0 0-1 0V12A1.5 1.5 0 0 0 7 13.5h7z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <select class="form-control" name="expense_category">
+                        <option hidden>Wybierz kategorię</option>
+                        {% for key in data.userExpenseCategories|keys %}
+                        {% if data.userExpenseCategories[key].category_type == data.expense_category %}
+                        <option selected>{{ data.userExpenseCategories[key].category_type }}</option>
+                        {% else %}
+                        <option>{{ data.userExpenseCategories[key].category_type }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="text-danger mb-2 w-100 text-5 ml-5 pl-2">{{ data.errors['expenseCategoryRequired'] }}</div>
+
+
+
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-wallet-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v2h6a.5.5 0 0 1 .5.5c0 .253.08.644.306.958.207.288.557.542 1.194.542.637 0 .987-.254 1.194-.542.226-.314.306-.705.306-.958a.5.5 0 0 1 .5-.5h6v-2A1.5 1.5 0 0 0 14.5 2h-13z" />
+                                <path d="M16 6.5h-5.551a2.678 2.678 0 0 1-.443 1.042C9.613 8.088 8.963 8.5 8 8.5c-.963 0-1.613-.412-2.006-.958A2.679 2.679 0 0 1 5.551 6.5H0v6A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-6z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <select class="form-control" name="payment_category">
+                        <option hidden>Wybierz kategorię</option>
+                        {% for key in data.userPaymentCategories|keys %}
+                        {% if data.userPaymentCategories[key].payment_category_type == data.payment_category %}
+                        <option selected>{{ data.userPaymentCategories[key].payment_category_type }}</option>
+                        {% else %}
+                        <option>{{ data.userPaymentCategories[key].payment_category_type }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="text-danger mb-2 w-100 text-5 ml-5 pl-2">{{ data.errors['paymentCategoryRequired'] }}</div>
+
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-file-text-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                    d="M12 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zM5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" id="comment" placeholder="Komentarz" name="comment" value="{{ data.comment }}">
+                </div>
+                <div class="row justify-content-around">
+                    <a href="/menu" class="btn btn-danger btn-lg btn-inline mt-3">
+                        Anuluj
+                        <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                        </svg>
+                    </a>
+
+                    <button type="submit" class="btn btn-success btn-lg btn-inline mt-3">
+                        Dodaj
+                        <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z" />
+                            <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z" />
+                            <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+
+{% block footer %}
+<script src="js/alertFadeOut.js"></script>
+<script src="js/validateExpense.js"></script>
+<script src="js/date.js"></script>
+<script src="js/amount.js"></script>
+{% endblock %}

@@ -19,11 +19,15 @@ $(document).ready(function() {
         /**
          * Validate the form
          */
-        $('#formIncome').validate({
+        $('#formExpense').validate({
             rules: {
                 amount: 'required',
                 date: 'required',
-                category: {
+                expense_category: {
+                    required: true,
+                    validCategory: true
+                },
+                payment_category: {
                     required: true,
                     validCategory: true
                 }
@@ -31,9 +35,13 @@ $(document).ready(function() {
             messages: {
                 amount: 'Wprowadż kwotę!',
                 date: 'Wprowadź datę!',
-                category: {
+                expense_category: {
                     required: 'Wprowadż kategorię!',
-                    validCategory: 'Wprowadż kategorię!'
+                    validCategory: 'Wprowadź kategorię wydatku!'
+                },
+                payment_category: {
+                    required: 'Wprowadż kategorię!',
+                    validCategory: 'Wprowadź metodę płatności!'
                 }
             }
         });
