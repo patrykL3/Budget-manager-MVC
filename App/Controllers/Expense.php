@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 
-//use \App\Models\ExpenseDataManager;
+use \App\Models\ExpenseDataManager;
 use \App\Flash;
 /**
  * Income controller
@@ -13,11 +13,11 @@ use \App\Flash;
  */
 class Expense extends Authentication_login
 {
-    //private $expenseDataManager;
+    private $expenseDataManager;
 
     public function __construct()
     {
-        //$this->expenseDataManager = new ExpenseDataManager($_POST);
+        $this->expenseDataManager = new ExpenseDataManager($_POST);
     }
 
 
@@ -28,7 +28,7 @@ class Expense extends Authentication_login
      */
     public function openAction()
     {
-        View::renderTemplate('expense/open.html');//, ['data' => $this->expenseDataManager]);
+        View::renderTemplate('expense/open.html', ['data' => $this->expenseDataManager]);
     }
 
     /**
@@ -37,13 +37,13 @@ class Expense extends Authentication_login
  * @return void
  */
     public function createAction()
-    {/*
-        if ($this->expenseDataManager->addIncome()) {
+    {
+        if ($this->expenseDataManager->addExpense()) {
             Flash::addMessage('Dodano nowy wydatek');
             $this->redirect('/expense');
             exit;
         } else {
-            View::renderTemplate('Expense/open.html', ['data' => $this->incomeDataManager]);
-        }*/
+            View::renderTemplate('Expense/open.html', ['data' => $this->expenseDataManager]);
+        }
     }
 }
