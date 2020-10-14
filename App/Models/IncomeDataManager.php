@@ -147,4 +147,46 @@ class IncomeDataManager extends \Core\Model
 
         return $userIncomesQuery->fetchAll();
     }
+
+    public function getUserIncomesFromPeriod($period, $balanceStartDate, $balanceEndDate)
+    {
+        $database = static::getDB();
+        $mainPartGettingIncomesQuery =
+                'SELECT i.income_id, ic.category_type, i.amount, i.date_of_income, i.income_comment
+                FROM incomes AS i
+                INNER JOIN incomes_categories AS ic
+                ON i.income_category_id = ic.income_category_id
+                INNER JOIN users_incomes AS ui
+                ON i.income_id = ui.income_id
+                WHERE
+                ui.user_id = :user_id
+                ';
+        $incomeTimePartOfTheQuery = $this->getIncomeTimePartOfTheQuery($period);
+
+        $userIncomesFromPeriodQuery = $database->prepare($mainPartGettingIncomesQuery.$incomeTimePartOfTheQuery.' ORDER BY i.date_of_income');
+        $userIncomesFromPeriodQuery->bindValue(':user_id', $this->loggedUser->user_id, PDO::PARAM_INT);
+        if($period != 'custom') {
+            $userIncomesFromPeriodQuery->bindValue(':currentDate', Date::getCurrentDate(), PDO::PARAM_STR);
+        } else {
+            $userIncomesFromPeriodQuery->bindValue(':balanceStartDate', $balanceStartDate, PDO::PARAM_STR);
+            $userIncomesFromPeriodQuery->bindValue(':balanceEndDate', $balanceEndDate, PDO::PARAM_STR);
+        }
+        $userIncomesFromPeriodQuery->execute();
+        return $userIncomesFromPeriodQuery->fetchAll();
+    }
+
+    private function getIncomeTimePartOfTheQuery($period)
+    {
+        if ($period == 'currentMonth') {
+            $incomeTimePartOfTheQuery = 'AND MONTH(i.date_of_income) = MONTH(:currentDate)';
+        } elseif ($period == 'previousMonth') {
+            $incomeTimePartOfTheQuery = 'AND MONTH(i.date_of_income) = MONTH(:currentDate)-1';
+        } elseif ($period == 'currentYear') {
+            $incomeTimePartOfTheQuery = 'AND YEAR(i.date_of_income) = YEAR(:currentDate)';
+        } elseif ($period == 'custom') {
+            $incomeTimePartOfTheQuery = 'AND i.date_of_income BETWEEN :balanceStartDate AND :balanceEndDate';
+        }
+
+        return $incomeTimePartOfTheQuery;
+    }
 }

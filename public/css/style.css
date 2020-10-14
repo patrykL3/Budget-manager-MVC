@@ -39,8 +39,13 @@ label.error {
     width: 380px;
 }
 
+
 .max-width-4 {
     max-width: 160px;
+}
+
+.max-width-3 {
+    max-width: 170px;
 }
 
 .min-width-4 {
