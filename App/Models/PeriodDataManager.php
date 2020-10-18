@@ -5,6 +5,7 @@ namespace App\Models;
 use PDO;
 use \App\Authentication;
 use \App\Models\IncomeDataManager;
+use \App\Models\ExpenseDataManager;
 use \App\Date;
 
 /**
@@ -14,11 +15,6 @@ use \App\Date;
  */
 class PeriodDataManager extends \Core\Model
 {
-    /**
-     * Error messages
-     *
-     * @var array
-     */
     private $incomeDataManager;
     private $expenseDataManager;
 
@@ -26,8 +22,12 @@ class PeriodDataManager extends \Core\Model
     public $periodTitle;
     public $rangePeriod = [];
     public $errors = [];
+
     public $incomesFromPeriod;
     public $expensesFromPeriod;
+    public $userIncomeCategories = [];
+    public $userExpenceCategories = [];
+
     public $balanceValuel;
     public $expensesSumToPie;
 
@@ -47,6 +47,7 @@ class PeriodDataManager extends \Core\Model
 
         $this->period = $period;
         $this->setPeriodTitle($period);
+        $this->userIncomeCategories = $this->incomeDataManager->userIncomeCategories;
 
         foreach ($rangePeriod as $key => $value) {
             $value = filter_input(INPUT_POST, $key);
@@ -90,6 +91,7 @@ class PeriodDataManager extends \Core\Model
         return true;
     }
 
+
     public function createData()
     {
         if ($this->period != 'custom') {
@@ -100,5 +102,23 @@ class PeriodDataManager extends \Core\Model
         //$this->expenseFromPeriod = $this->expenseDataManager->getUserExpensesFromPeriod($period, $rangePeriod);
         //$this->calculateBalance();
         //$this->createExpensesDataToPie();
+    }
+
+
+    public static function getIncomeData($incomeId)
+    {
+        return IncomeDataManager::getIncomeData($incomeId);
+    }
+
+
+    public static function validateIncomeEditData($incomeId, $data = [])
+    {
+        IncomeDataManager::validateIncomeEditData($incomeId, $data);
+    }
+
+
+    public static function updateIncome($incomeId, $data = [])
+    {
+        IncomeDataManager::updateIncome($incomeId, $data);
     }
 }

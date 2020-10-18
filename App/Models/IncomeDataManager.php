@@ -84,10 +84,10 @@ class IncomeDataManager extends \Core\Model
     }
 
 
-    private function getSelectedCategoryId()
+    private function getSelectedCategoryId($category)
     {
         foreach ($this->userIncomeCategories as $onceOfCategories) {
-            if ($onceOfCategories['category_type'] === $this->category) {
+            if ($onceOfCategories['category_type'] === $category) {
                 return $onceOfCategories['income_category_id'];
             }
         }
@@ -95,7 +95,7 @@ class IncomeDataManager extends \Core\Model
 
     private function saveIncomeToIncomesTabel()
     {
-        $selectedCategoryId = $this->getSelectedCategoryId();
+        $selectedCategoryId = $this->getSelectedCategoryId($this->category);
 
         $database = static::getDB();
 
@@ -130,7 +130,7 @@ class IncomeDataManager extends \Core\Model
         $assignIncomeToUserQuery->execute();
     }
 
-    public function getUserIncomeCategories($userId)
+    public static function getUserIncomeCategories($userId)
     {
         $database = static::getDB();
 
@@ -165,7 +165,7 @@ class IncomeDataManager extends \Core\Model
 
         $userIncomesFromPeriodQuery = $database->prepare($mainPartGettingIncomesQuery.$incomeTimePartOfTheQuery.' ORDER BY i.date_of_income');
         $userIncomesFromPeriodQuery->bindValue(':user_id', $this->loggedUser->user_id, PDO::PARAM_INT);
-        if($period != 'custom') {
+        if ($period != 'custom') {
             $userIncomesFromPeriodQuery->bindValue(':currentDate', Date::getCurrentDate(), PDO::PARAM_STR);
         } else {
             $userIncomesFromPeriodQuery->bindValue(':balanceStartDate', $balanceStartDate, PDO::PARAM_STR);
@@ -188,5 +188,90 @@ class IncomeDataManager extends \Core\Model
         }
 
         return $incomeTimePartOfTheQuery;
+    }
+
+
+    public static function getIncomeData($incomeId)
+    {
+        $database = static::getDB();
+
+        $userIncomeToEditQuery = $database->prepare(
+            "SELECT ic.category_type, i.amount, i.date_of_income, i.income_comment
+            FROM incomes AS i
+            INNER JOIN incomes_categories AS ic
+            ON i.income_category_id = ic.income_category_id
+            WHERE
+            i.income_id = :income_id;"
+        );
+        $userIncomeToEditQuery->bindValue(':income_id', $incomeId, PDO::PARAM_INT);
+        $userIncomeToEditQuery->execute();
+        return $userIncomeToEditQuery->fetch();
+    }
+
+
+    public static function updateIncome($incomeId, $data = [])
+    {
+        if (IncomeDataManager::validateIncomeEditData($incomeId, $data)) {
+            $database = static::getDB();
+            $selectedCategoryId = IncomeDataManager::getSelectedCategoryIdToEdit($data['category']);
+
+            $editIncome = $database->prepare(
+                'UPDATE incomes
+            SET income_category_id = :income_category_id, amount = :amount, date_of_income = :date_of_income, income_comment = :income_comment
+            WHERE income_id = :income_id;
+            '
+            );
+            $editIncome->bindValue(':income_id', $incomeId, PDO::PARAM_INT);
+            $editIncome->bindValue(':income_category_id', $selectedCategoryId, PDO::PARAM_INT);
+            $editIncome->bindValue(':amount', $data['amount'], PDO::PARAM_STR);
+            $editIncome->bindValue(':date_of_income', $data['date'], PDO::PARAM_STR);
+            $editIncome->bindValue(':income_comment', $data['comment'], PDO::PARAM_STR);
+            $editIncome->execute();
+        }
+    }
+
+
+    public static function getSelectedCategoryIdToEdit($selectedCategory)
+    {
+        $LoggedUserId = Authentication::getLoggedUser()->user_id;
+        $userIncomeCategories = IncomeDataManager::getUserIncomeCategories($LoggedUserId);
+
+        foreach ($userIncomeCategories as $onceOfCategories) {
+            if ($onceOfCategories['category_type'] === $selectedCategory) {
+                return $onceOfCategories['income_category_id'];
+            }
+        }
+    }
+
+
+    private static function validateIncomeEditData($incomeId, $data = [])
+    {
+        $incomeId = filter_var($incomeId, FILTER_VALIDATE_INT);
+        if (empty($incomeId)) {
+            return false;
+        }
+
+        // Amount
+        $data['amount'] = filter_input(INPUT_POST, 'amount');
+        $data['amount'] = str_replace(',', '.', $data['amount']);
+        $data['amount'] = filter_var($data['amount'], FILTER_VALIDATE_FLOAT);
+        if (empty($data['amount'])) {
+            echo "blad1";
+            return false;
+        }
+
+        // Date
+        $data['date'] = filter_input(INPUT_POST, 'date');
+        if (!Date::isRealDate($data['date'])) {
+            return false;
+        }
+
+        // Category
+        $data['category'] = filter_input(INPUT_POST, 'category');
+        if (empty($data['category'])) {
+            return false;
+        }
+
+        return true;
     }
 }

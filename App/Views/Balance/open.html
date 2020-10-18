@@ -15,7 +15,8 @@
 
 
 {% block body %}
-
+<div class="result">
+</div>
 <main>
     <div class="container justify-content-center">
 
@@ -65,10 +66,10 @@
                         <ul class="list-group text-center">
                             {% for key in data.incomesFromPeriod|keys %}
                             <li class='list-group-item list-group-item-success'>
-                                <span class='mr-1'>{{ data.incomesFromPeriod[key].category_type }}</span>
-                                <span class='font-weight-bold'>{{ data.incomesFromPeriod[key].amount }}</span>
+                                <span id="categoryIncomeId{{ data.incomesFromPeriod[key].income_id }}" class='mr-1'>{{ data.incomesFromPeriod[key].category_type }}</span>
+                                <span id="amountIncomeId{{ data.incomesFromPeriod[key].income_id }}" class='font-weight-bold w-100'>{{ data.incomesFromPeriod[key].amount }}</span>
                                 <span>
-                                    <a class='edit' href='/budget-manager/balance.php?link=".$selectedBalancePeriod."&income_id_to_edit={{ data.incomesFromPeriod[key].income_id }}'>
+                                    <a class='edit' href="" data-target="#edit-income-modal" data-toggle="modal" role="button" id="{{ data.incomesFromPeriod[key].income_id }}">
                                         <svg width='1em' height='1em' viewBox='0 0 16 16' class='ml-3 bi bi-pen text-primary' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
                                             <path fill-rule='evenodd'
                                                 d='M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z' />
@@ -76,15 +77,19 @@
                                             <path d='M13.293 1.207a1 1 0 0 1 1.414 0l.03.03a1 1 0 0 1 .03 1.383L13.5 4 12 2.5l1.293-1.293z' />
                                         </svg>
                                     </a>
-                                    <a class='delete' href='php/delete-income.php?id={{ data.incomesFromPeriod[key].income_id }}'>
+                                    <a class='delete' href='php/delete-income.php?id='>
                                         <svg width='1em' height='1em' viewBox='0 0 16 16' class='ml-2 bi bi-trash-fill text-primary' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
                                             <path fill-rule='evenodd'
                                                 d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z' />
                                         </svg>
                                     </a>
                                 </span>
-                                <br><span class='text-5'>Komentarz: {{ data.incomesFromPeriod[key].income_comment }}</span>
-                                <br><span class='text-5'>{{ data.incomesFromPeriod[key].date_of_income }}</span>
+                                {% if data.incomesFromPeriod[key].income_comment != '' %}
+                                <span id="commentIncomeId{{ data.incomesFromPeriod[key].income_id }}" class='text-5 d-block'>Komentarz: {{ data.incomesFromPeriod[key].income_comment }}</span>
+                                {% else %}
+                                <span id="commentIncomeId{{ data.incomesFromPeriod[key].income_id }}" class='text-5 d-block'></span>
+                                {% endif %}
+                                <span id="dateIncomeId{{ data.incomesFromPeriod[key].income_id }}" class='text-5'>{{ data.incomesFromPeriod[key].date_of_income }}</span>
                             </li>
                             {% endfor %}
 
@@ -97,7 +102,7 @@
                                         <h3 class="h4 font-weight-bold">Edytuj przychód</h3>
                                     </div>
                                     <div>
-                                        <form method="post">
+                                        <form id="formIncome" method="post" action="">
                                             <div class="modal-body">
                                                 <div class="input-group mb-2 mr-sm-2">
                                                     <div class="input-group-prepend">
@@ -110,17 +115,9 @@
                                                             </svg>
                                                         </div>
                                                     </div>
-                                                    <input type="text" class="form-control" value="<?php
-                                                    if (!isset($_SESSION['entered_amount_income'])) {
-                                                        echo $editIncome['amount'];
-                                                    } else {
-                                                        echo $_SESSION['entered_amount_income'];
-                                                        unset($_SESSION['entered_amount_income']);
-                                                    }
-
-                                                     ?>" name="amountIncome">
+                                                    <input type="text" class="form-control amount" id="editAmountIncome" name="amount">
                                                 </div>
-                                                <div class="input-group mb-2 mr-sm-2">
+                                                <div class=" input-group mb-2 mr-sm-2">
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">
                                                             <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-calendar-date-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -129,7 +126,7 @@
                                                             </svg>
                                                         </div>
                                                     </div>
-                                                    <input type="date" class="form-control" value="" name="date">
+                                                    <input type="date" class="form-control" id="editDateIncome" value="" name="date">
                                                 </div>
 
                                                 <div class="input-group mb-2 mr-sm-2">
@@ -143,8 +140,10 @@
                                                             </svg>
                                                         </div>
                                                     </div>
-                                                    <select class="form-control" name="category">
-                                                        <option>{$onceOfType['category_type']}</option>
+                                                    <select class="form-control" name="category" id="incomeCategorySelector">
+                                                        {% for key in data.userIncomeCategories|keys %}
+                                                        <option class="incomeCategoryOption" value="{{ data.userIncomeCategories[key].category_type }}">{{ data.userIncomeCategories[key].category_type }}</option>
+                                                        {% endfor %}
                                                     </select>
                                                 </div>
 
@@ -157,17 +156,10 @@
                                                             </svg>
                                                         </div>
                                                     </div>
-                                                    <input type="text" class="form-control" name="comment" value="<?php
-                                                    if (!isset($_SESSION['entered_comment'])) {
-                                                        echo $editIncome['income_comment'];
-                                                    } else {
-                                                        echo $_SESSION['entered_comment'];
-                                                        unset($_SESSION['entered_comment']);
-                                                    }
-                                                     ?>">
+                                                    <input type="text" class="form-control" id="editComment" name="comment">
                                                 </div>
                                                 <div class="row justify-content-around">
-                                                    <a href="<?php echo "balance.php?link=".$selectedBalancePeriod;?>" class="btn btn-danger btn-lg btn-inline mt-3">
+                                                    <a href="#" class="btn btn-danger btn-lg btn-inline mt-3 cancel">
                                                         Anuluj
                                                         <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                             <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
@@ -176,7 +168,7 @@
                                                         </svg>
                                                     </a>
 
-                                                    <button type="submit" class="btn btn-success btn-lg btn-inline mt-3">
+                                                    <button id="update" href="#" type="submit" class="btn btn-success btn-lg btn-inline mt-3">
                                                         Zapisz
                                                         <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-file-earmark-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
@@ -190,7 +182,6 @@
                                 </div>
                             </div>
                         </div>
-
 
                     </section>
                 </div>
@@ -239,8 +230,6 @@
                 </div>
             </div>
 
-
-
             <div class="row justify-content-center pl-4 pr-4 mb-3">
                 <div class="col-10 col-md-8 primary-radius text-center pb-3 ">
                     <h2 class="h5 text-white pt-3 font-weight-bold">Wydatki z wybranego okresu</h2>
@@ -252,11 +241,16 @@
         </section>
     </div>
 </main>
-<div id="results">
+
+{% endblock %}
 
 
-    {% endblock %}
+{% block footer %}
 
-    {% block footer %}
-    <script src="/js/validateBalanceDates.js"></script>
-    {% endblock %}
+<script src="/js/validateBalanceDates.js"></script>
+<script src="/js/amount.js"></script>
+<script src="/js/hideModal.js"></script>
+<script src="/js/validateIncome.js"></script>
+<script src="/js/editIncome.js"></script>
+
+{% endblock %}
