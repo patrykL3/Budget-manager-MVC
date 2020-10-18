@@ -40,4 +40,11 @@ class Balance extends Authentication_login
 
         PeriodDataManager::updateIncome($incomeId, $_POST);
     }
+
+    public function deleteIncomeAction()
+    {
+        $incomeId = $_POST['incomeId'];
+
+        PeriodDataManager::deleteIncome($incomeId);
+    }
 }

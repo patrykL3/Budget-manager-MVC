@@ -121,4 +121,10 @@ class PeriodDataManager extends \Core\Model
     {
         IncomeDataManager::updateIncome($incomeId, $data);
     }
+
+
+    public static function deleteIncome($incomeIdToDelete)
+    {
+        IncomeDataManager::deleteIncome($incomeIdToDelete);
+    }
 }

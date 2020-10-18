@@ -1,9 +1,9 @@
 $(document).ready(function() {
 
-    var income_id;
+    let income_id;
 
 
-    $(document).on('click', '.edit', function() {
+    $(document).on('click', '.editIncome', function() {
 
         income_id = $(this).attr("id");
 
@@ -42,7 +42,7 @@ $(document).ready(function() {
         let comment = $('#editComment').val();
 
         let pathWithData = getEditIncomeUrlWithData(income_id);
-        var error = $('.form-control.error');
+        let error = $('.form-control.error');
 
         if (!error.length) {
             $.ajax({

@@ -274,4 +274,19 @@ class IncomeDataManager extends \Core\Model
 
         return true;
     }
+
+
+    public static function deleteIncome($incomeIdToDelete)
+    {
+        $incomeIdToDelete = filter_var($incomeIdToDelete, FILTER_VALIDATE_INT);
+        $database = static::getDB();
+
+        try {
+            $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $database->exec("DELETE FROM incomes WHERE income_id=$incomeIdToDelete");
+            $database->exec("DELETE FROM users_incomes WHERE income_id=$incomeIdToDelete");
+        } catch (PDOException $e) {
+            echo "<br>".$e->getMessage();
+        };
+    }
 }
