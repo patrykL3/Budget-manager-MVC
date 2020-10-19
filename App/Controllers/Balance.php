@@ -36,10 +36,9 @@ class Balance extends Authentication_login
 
     public function updateIncomeAction()
     {
-        $incomeId = $_GET['incomeId'];
-
-        PeriodDataManager::updateIncome($incomeId, $_POST);
+        PeriodDataManager::updateIncome($_POST);
     }
+
 
     public function deleteIncomeAction()
     {

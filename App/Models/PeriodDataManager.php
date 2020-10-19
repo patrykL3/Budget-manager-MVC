@@ -99,7 +99,7 @@ class PeriodDataManager extends \Core\Model
             $this->balance_end_date = '';
         }
         $this->incomesFromPeriod = $this->incomeDataManager->getUserIncomesFromPeriod($this->period, $this->balance_start_date, $this->balance_end_date);
-        //$this->expenseFromPeriod = $this->expenseDataManager->getUserExpensesFromPeriod($period, $rangePeriod);
+        $this->expensesFromPeriod = $this->expenseDataManager->getUserExpensesFromPeriod($this->period, $this->balance_start_date, $this->balance_end_date);
         //$this->calculateBalance();
         //$this->createExpensesDataToPie();
     }
@@ -111,15 +111,15 @@ class PeriodDataManager extends \Core\Model
     }
 
 
-    public static function validateIncomeEditData($incomeId, $data = [])
+    public static function validateIncomeEditData($data = [])
     {
-        IncomeDataManager::validateIncomeEditData($incomeId, $data);
+        IncomeDataManager::validateIncomeEditData($data);
     }
 
 
-    public static function updateIncome($incomeId, $data = [])
+    public static function updateIncome($data = [])
     {
-        IncomeDataManager::updateIncome($incomeId, $data);
+        IncomeDataManager::updateIncome($data);
     }
 
 

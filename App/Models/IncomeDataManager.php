@@ -209,9 +209,9 @@ class IncomeDataManager extends \Core\Model
     }
 
 
-    public static function updateIncome($incomeId, $data = [])
+    public static function updateIncome($data = [])
     {
-        if (IncomeDataManager::validateIncomeEditData($incomeId, $data)) {
+        if (IncomeDataManager::validateIncomeEditData($data)) {
             $database = static::getDB();
             $selectedCategoryId = IncomeDataManager::getSelectedCategoryIdToEdit($data['category']);
 
@@ -221,7 +221,7 @@ class IncomeDataManager extends \Core\Model
             WHERE income_id = :income_id;
             '
             );
-            $editIncome->bindValue(':income_id', $incomeId, PDO::PARAM_INT);
+            $editIncome->bindValue(':income_id', $data['income_id'], PDO::PARAM_INT);
             $editIncome->bindValue(':income_category_id', $selectedCategoryId, PDO::PARAM_INT);
             $editIncome->bindValue(':amount', $data['amount'], PDO::PARAM_STR);
             $editIncome->bindValue(':date_of_income', $data['date'], PDO::PARAM_STR);
@@ -244,10 +244,11 @@ class IncomeDataManager extends \Core\Model
     }
 
 
-    private static function validateIncomeEditData($incomeId, $data = [])
+    private static function validateIncomeEditData($data = [])
     {
-        $incomeId = filter_var($incomeId, FILTER_VALIDATE_INT);
-        if (empty($incomeId)) {
+        $data['income_id'] = filter_input(INPUT_POST, 'income_id');
+        $data['income_id'] = filter_var($data['income_id'], FILTER_VALIDATE_INT);
+        if (empty($data['income_id'])) {
             return false;
         }
 

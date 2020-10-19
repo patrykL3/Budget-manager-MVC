@@ -183,4 +183,51 @@ class ExpenseDataManager extends \Core\Model
 
         return $userPaymentQuery->fetchAll();
     }
+
+    public function getUserExpensesFromPeriod($period, $balanceStartDate, $balanceEndDate)
+    {
+        $database = static::getDB();
+        $mainPartGettingExpensesQuery =
+            'SELECT e.expense_id, pc.payment_category_type, ec.category_type, e.amount, e.date_of_expense, e.expense_comment
+            FROM expenses AS e
+            INNER JOIN expenses_categories AS ec
+            ON e.expense_category_id = ec.expense_category_id
+            INNER JOIN payments_categories AS pc
+            ON e.payment_category_id = pc.payment_category_id
+            INNER JOIN users_expenses AS ue
+            ON e.expense_id = ue.expense_id
+            WHERE
+            ue.user_id = :user_id
+            ';
+
+        $expenseTimePartOfTheQuery = $this->getExpenseTimePartOfTheQuery($period);
+
+        $userExpensesFromPeriodQuery = $database->prepare($mainPartGettingExpensesQuery.$expenseTimePartOfTheQuery.' ORDER BY e.date_of_expense');
+        $userExpensesFromPeriodQuery->bindValue(':user_id', $this->loggedUser->user_id, PDO::PARAM_INT);
+        if ($period != 'custom') {
+            $userExpensesFromPeriodQuery->bindValue(':currentDate', Date::getCurrentDate(), PDO::PARAM_STR);
+        } else {
+            $userExpensesFromPeriodQuery->bindValue(':balanceStartDate', $balanceStartDate, PDO::PARAM_STR);
+            $userExpensesFromPeriodQuery->bindValue(':balanceEndDate', $balanceEndDate, PDO::PARAM_STR);
+        }
+        $userExpensesFromPeriodQuery->execute();
+        return $userExpensesFromPeriodQuery->fetchAll();
+    }
+
+    private function getExpenseTimePartOfTheQuery($period)
+    {
+        if ($period == 'currentMonth') {
+            $expenseTimePartOfTheQuery = 'AND MONTH(e.date_of_expense) = MONTH(:currentDate)';
+        } elseif ($period == 'previousMonth') {
+            $expenseTimePartOfTheQuery = 'AND MONTH(e.date_of_expense) = MONTH(:currentDate)-1';
+        } elseif ($period == 'currentYear') {
+            $expenseTimePartOfTheQuery = 'AND YEAR(e.date_of_expense) = YEAR(:currentDate)';
+        } elseif ($period == 'custom') {
+            $expenseTimePartOfTheQuery = 'AND e.date_of_expense BETWEEN :balanceStartDate AND :balanceEndDate';
+        }
+
+        return $expenseTimePartOfTheQuery;
+    }
+
+
 }

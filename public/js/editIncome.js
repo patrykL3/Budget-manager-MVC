@@ -41,18 +41,18 @@ $(document).ready(function() {
         let category = $('#incomeCategorySelector').val();
         let comment = $('#editComment').val();
 
-        let pathWithData = getEditIncomeUrlWithData(income_id);
         let error = $('.form-control.error');
 
         if (!error.length) {
             $.ajax({
                 type: "POST",
-                url: pathWithData,
+                url: "/Balance/updateIncome",
                 data: {
                     "amount": amount,
                     "date": date,
                     "category": category,
-                    "comment": comment
+                    "comment": comment,
+                    "income_id": income_id
                 },
                 success: function(data) {
                     $("#edit-income-modal").modal('hide');
@@ -71,15 +71,6 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
-
-
-    function getEditIncomeUrlWithData(incomeId) {
-        let baseActionPath = "/Balance/updateIncome";
-        let variableName = '?incomeId=';
-        let pathWithData = baseActionPath.concat(variableName.concat(incomeId));
-
-        return pathWithData;
-    }
 
     function getIncomeSpanId(baseSpan, incomeId) {
         let spanId = baseSpan.concat(incomeId);
