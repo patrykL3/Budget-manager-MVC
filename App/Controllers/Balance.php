@@ -28,9 +28,9 @@ class Balance extends Authentication_login
     public function getDataToEditIncomeAction()
     {
         $incomeIdToEdit = $_POST['income_id'];
-        $IncomeToEdit = PeriodDataManager::getIncomeData($incomeIdToEdit);
+        $incomeToEdit = PeriodDataManager::getIncomeData($incomeIdToEdit);
 
-        echo json_encode($IncomeToEdit);
+        echo json_encode($incomeToEdit);
     }
 
 
@@ -42,8 +42,20 @@ class Balance extends Authentication_login
 
     public function deleteIncomeAction()
     {
-        $incomeId = $_POST['incomeId'];
-
         PeriodDataManager::deleteIncome($incomeId);
+    }
+
+
+    public function getDataToEditExpenseAction()
+    {
+        $expenseIdToEdit = $_POST['expense_id'];
+        $expenseToEdit = PeriodDataManager::getExpenseData($expenseIdToEdit);
+
+        echo json_encode($expenseToEdit);
+    }
+
+    public function updateExpenseAction()
+    {
+        PeriodDataManager::updateExpense($_POST);
     }
 }

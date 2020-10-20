@@ -27,6 +27,7 @@ class PeriodDataManager extends \Core\Model
     public $expensesFromPeriod;
     public $userIncomeCategories = [];
     public $userExpenceCategories = [];
+    public $userPaymentCategories = [];
 
     public $balanceValuel;
     public $expensesSumToPie;
@@ -48,6 +49,8 @@ class PeriodDataManager extends \Core\Model
         $this->period = $period;
         $this->setPeriodTitle($period);
         $this->userIncomeCategories = $this->incomeDataManager->userIncomeCategories;
+        $this->userExpenseCategories = $this->expenseDataManager->userExpenseCategories;
+        $this->userPaymentCategories = $this->expenseDataManager->userPaymentCategories;
 
         foreach ($rangePeriod as $key => $value) {
             $value = filter_input(INPUT_POST, $key);
@@ -126,5 +129,15 @@ class PeriodDataManager extends \Core\Model
     public static function deleteIncome($incomeIdToDelete)
     {
         IncomeDataManager::deleteIncome($incomeIdToDelete);
+    }
+
+    public static function getExpenseData($expenseId)
+    {
+        return ExpenseDataManager::getExpenseData($expenseId);
+    }
+
+    public static function updateExpense($data = [])
+    {
+        ExpenseDataManager::updateExpense($data);
     }
 }

@@ -148,7 +148,7 @@ class ExpenseDataManager extends \Core\Model
         $assignIncomeToUserQuery->execute();
     }
 
-    private function getUserExpenseCategories($userId)
+    public static function getUserExpenseCategories($userId)
     {
         $database = static::getDB();
 
@@ -166,7 +166,7 @@ class ExpenseDataManager extends \Core\Model
         return $userExpenseQuery->fetchAll();
     }
 
-    private function getUserPaymentCategories($userId)
+    public static function getUserPaymentCategories($userId)
     {
         $database = static::getDB();
 
@@ -230,4 +230,109 @@ class ExpenseDataManager extends \Core\Model
     }
 
 
+    public static function getExpenseData($expenseId)
+    {
+        $database = static::getDB();
+
+        $userExpenseToEditQuery = $database->prepare(
+            "SELECT ec.category_type, pc.payment_category_type, e.amount, e.date_of_expense, e.expense_comment
+            FROM expenses AS e
+            INNER JOIN expenses_categories AS ec
+            ON e.expense_category_id = ec.expense_category_id
+            INNER JOIN payments_categories AS pc
+            ON pc.payment_category_id = e.payment_category_id
+            WHERE
+            e.expense_id = :expense_id_to_edit;"
+        );
+
+        $userExpenseToEditQuery->bindValue(':expense_id_to_edit', $expenseId, PDO::PARAM_INT);
+        $userExpenseToEditQuery->execute();
+        return $userExpenseToEditQuery->fetch();
+    }
+
+    public static function updateExpense($data = [])
+    {
+        print_r($data);
+        if (ExpenseDataManager::validateExpenseEditData($data)) {
+        $database = static::getDB();
+        $selectedCategoryId = ExpenseDataManager::getSelectedCategoryIdToEdit($data['category']);
+        $selectedPaymentCategoryId = ExpenseDataManager::getSelectedPaymentCategoryIdToEdit($data['payment_category']);
+
+        $editExpense = $database->prepare(
+            'UPDATE expenses
+                SET expense_category_id = :expense_category_id, payment_category_id = :payment_category_id, amount = :amount, date_of_expense = :date_of_expense, expense_comment = :expense_comment
+                WHERE expense_id = :expense_id;
+                '
+        );
+        $editExpense->bindValue(':expense_id', $data['expense_id'], PDO::PARAM_INT);
+        $editExpense->bindValue(':expense_category_id', $selectedCategoryId, PDO::PARAM_INT);
+        $editExpense->bindValue(':payment_category_id', $selectedPaymentCategoryId, PDO::PARAM_INT);
+        $editExpense->bindValue(':amount', $data['amount'], PDO::PARAM_STR);
+        $editExpense->bindValue(':date_of_expense', $data['date'], PDO::PARAM_STR);
+        $editExpense->bindValue(':expense_comment', $data['comment'], PDO::PARAM_STR);
+        $editExpense->execute();
+        }
+    }
+
+    public static function getSelectedCategoryIdToEdit($selectedCategory)
+    {
+        $LoggedUserId = Authentication::getLoggedUser()->user_id;
+        $userExpenseCategories = ExpenseDataManager::getUserExpenseCategories($LoggedUserId);
+
+        foreach ($userExpenseCategories as $onceOfCategories) {
+            if ($onceOfCategories['category_type'] === $selectedCategory) {
+                return $onceOfCategories['expense_category_id'];
+            }
+        }
+    }
+
+    public static function getSelectedPaymentCategoryIdToEdit($selectedPaymentCategory)
+    {
+        $LoggedUserId = Authentication::getLoggedUser()->user_id;
+        $userPaymentCategories = ExpenseDataManager::getUserPaymentCategories($LoggedUserId);
+
+        foreach ($userPaymentCategories as $onceOfCategories) {
+            if ($onceOfCategories['payment_category_type'] === $selectedPaymentCategory) {
+                return $onceOfCategories['payment_category_id'];
+            }
+        }
+    }
+
+
+    private static function validateExpenseEditData($data = [])
+    {
+        $data['expense_id'] = filter_input(INPUT_POST, 'expense_id');
+        $data['expense_id'] = filter_var($data['expense_id'], FILTER_VALIDATE_INT);
+        if (empty($data['expense_id'])) {
+            return false;
+        }
+
+        // Amount
+        $data['amount'] = filter_input(INPUT_POST, 'amount');
+        $data['amount'] = str_replace(',', '.', $data['amount']);
+        $data['amount'] = filter_var($data['amount'], FILTER_VALIDATE_FLOAT);
+        if (empty($data['amount'])) {
+            return false;
+        }
+
+        // Date
+        $data['date'] = filter_input(INPUT_POST, 'date');
+        if (!Date::isRealDate($data['date'])) {
+            return false;
+        }
+
+        // Category
+        $data['category'] = filter_input(INPUT_POST, 'category');
+        if (empty($data['category'])) {
+            return false;
+        }
+
+        // Payment category
+        $data['payment_category'] = filter_input(INPUT_POST, 'payment_category');
+        if (empty($data['payment_category'])) {
+            return false;
+        }
+
+        return true;
+    }
 }

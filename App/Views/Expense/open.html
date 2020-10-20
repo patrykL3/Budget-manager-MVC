@@ -31,7 +31,7 @@
                             </svg>
                         </div>
                     </div>
-                    <input type="text" id="amount" class="form-control" placeholder="Kwota" name="amount" value="{{ data.amount }}" autofocus>
+                    <input type="text" class="form-control amount" placeholder="Kwota" name="amount" value="{{ data.amount }}" autofocus>
                 </div>
                 <div class="text-danger mb-2 w-100 text-5 ml-5 pl-2">{{ data.errors['amountRequired'] }}</div>
 
@@ -135,8 +135,8 @@
 
 
 {% block footer %}
+<script src="js/amount.js"></script>
 <script src="js/alertFadeOut.js"></script>
 <script src="js/validateExpense.js"></script>
 <script src="js/date.js"></script>
-<script src="js/amount.js"></script>
 {% endblock %}

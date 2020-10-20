@@ -8,7 +8,7 @@ $(document).ready(function() {
         if (event.which != 8) {
 
             let currentChar = String.fromCharCode(event.which);
-            let fullValue = $(".amount").val() + currentChar;
+            let fullValue = $(this).val() + currentChar;
 
             if (!regularExpresionChar.test(currentChar) || regularExpresionEntireAmount.test(fullValue)) {
                 event.preventDefault();
