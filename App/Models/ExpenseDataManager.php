@@ -335,4 +335,19 @@ class ExpenseDataManager extends \Core\Model
 
         return true;
     }
+
+
+    public static function deleteExpense($expenseIdToDelete)
+    {
+        $expenseIdToDelete = filter_var($expenseIdToDelete, FILTER_VALIDATE_INT);
+        $database = static::getDB();
+
+        try {
+            $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $database->exec("DELETE FROM expenses WHERE expense_id=$expenseIdToDelete");
+            $database->exec("DELETE FROM users_expenses WHERE expense_id=$expenseIdToDelete");
+        } catch (PDOException $e) {
+            echo "<br>".$e->getMessage();
+        };
+    }
 }

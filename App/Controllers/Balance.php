@@ -42,6 +42,8 @@ class Balance extends Authentication_login
 
     public function deleteIncomeAction()
     {
+        $incomeId = $_POST['incomeId'];
+
         PeriodDataManager::deleteIncome($incomeId);
     }
 
@@ -57,5 +59,13 @@ class Balance extends Authentication_login
     public function updateExpenseAction()
     {
         PeriodDataManager::updateExpense($_POST);
+    }
+
+
+    public function deleteExpenseAction()
+    {
+        $expenseId = $_POST['expenseId'];
+
+        PeriodDataManager::deleteExpense($expenseId);
     }
 }

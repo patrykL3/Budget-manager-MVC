@@ -140,4 +140,9 @@ class PeriodDataManager extends \Core\Model
     {
         ExpenseDataManager::updateExpense($data);
     }
+
+    public static function deleteExpense($expenseIdToDelete)
+    {
+        ExpenseDataManager::deleteExpense($expenseIdToDelete);
+    }
 }
