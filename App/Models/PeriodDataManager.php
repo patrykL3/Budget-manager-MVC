@@ -29,8 +29,8 @@ class PeriodDataManager extends \Core\Model
     public $userExpenceCategories = [];
     public $userPaymentCategories = [];
 
-    public $balanceValuel;
-    public $expensesSumToPie;
+    public $balanceValue;
+    public $expensesSumsToPie= [];
 
 
 
@@ -103,9 +103,42 @@ class PeriodDataManager extends \Core\Model
         }
         $this->incomesFromPeriod = $this->incomeDataManager->getUserIncomesFromPeriod($this->period, $this->balance_start_date, $this->balance_end_date);
         $this->expensesFromPeriod = $this->expenseDataManager->getUserExpensesFromPeriod($this->period, $this->balance_start_date, $this->balance_end_date);
-        //$this->calculateBalance();
-        //$this->createExpensesDataToPie();
+        $this->calculateBalance();
+        $this->createExpensesDataToPie();
     }
+
+    private function calculateBalance()
+    {
+        $incomesSum = 0;
+        $expensesSum = 0;
+
+        foreach ($this->incomesFromPeriod as $onceIncome) {
+            $incomesSum += $onceIncome['amount'];
+        }
+        foreach ($this->expensesFromPeriod as $onceExpense) {
+            $expensesSum += $onceExpense['amount'];
+        }
+
+        $this->balanceValue= $incomesSum - $expensesSum;
+    }
+
+
+    private function createExpensesDataToPie()
+    {
+        $incomesSum = 0;
+        $expensesSum = 0;
+
+        $this->expensesSumsToPie= array();
+        foreach ($this->expensesFromPeriod as $onceExpense) {
+            $categoryName = $onceExpense['category_type'];
+            $this->expensesSumsToPie[$categoryName] = 0;
+        }
+        foreach ($this->expensesFromPeriod as $onceExpense) {
+            $categoryName = $onceExpense['category_type'];
+            $this->expensesSumsToPie[$categoryName] += $onceExpense['amount'];
+        }
+    }
+
 
 
     public static function getIncomeData($incomeId)

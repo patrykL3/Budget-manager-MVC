@@ -222,14 +222,6 @@
                             {% endfor %}
                         </ul>
 
-
-
-
-
-
-
-
-
                         <div class="modal fade" id="edit-expense-modal">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -336,25 +328,22 @@
                             </div>
                         </div>
 
-
-
-
-
-
-
                     </section>
                 </div>
             </div>
 
             <div class="row justify-content-center pl-4 pr-4 mb-4 mt-4">
+                {% if data.balanceValue > 0 %}
                 <div class='col-10 col-md-8 success-radius text-center pb-3'>
-                    <h2 class='h5 text-white pt-2 pb-2 mt-2 font-weight-bold'>Bilans: {$balance} zł</h2>
+                    <h2 class='h5 text-white pt-2 pb-2 mt-2 font-weight-bold'>Bilans: {{ data.balanceValue }} zł</h2>
                     <span class='mr-2 text-white d-inline text-4 align-self-center font-weight-bold'>Gratulacje! Świetnie zarządzasz finansami!</span>
                 </div>
+                {% else %}
                 <div class='col-10 col-md-8 bg-warning rounded text-center pb-3'>
-                    <h2 class='h5 text-white pt-2 pb-2 mt-2 font-weight-bold'>Bilans: {$balance} zł</h2>
+                    <h2 class='h5 text-white pt-2 pb-2 mt-2 font-weight-bold'>Bilans: {{ data.balanceValue }} zł</h2>
                     <span class='mr-2 text-white d-inline text-4 align-self-center font-weight-bold'>Nie uzyskano dodatniego bilansu!</span>
                 </div>
+                {% endif %}
             </div>
 
             <div class="row justify-content-center pl-4 pr-4 mb-3">
@@ -369,11 +358,16 @@
     </div>
 </main>
 
+
+
+
 {% endblock %}
 
 
 {% block footer %}
-
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script src="/js/validateBalanceDates.js"></script>
 <script src="/js/amount.js"></script>
 <script src="/js/hideModal.js"></script>
@@ -383,5 +377,54 @@
 <script src="/js/deleteIncome.js"></script>
 <script src="/js/deleteExpense.js"></script>
 
+<script type='text/javascript'>
+    // Build the chart
+    Highcharts.chart('container', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: null
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
+                    distance: -60,
+                    filter: {
+                        property: 'percentage',
+                        operator: '>',
+                        value: 4
+                    }
+                }
+            }
+        },
+        series: [{
+                name: '',
+                data: [
+                        {%for key in data.expensesSumsToPie | keys %}
+                        {
+                            name: '{{key}} ({{ data.expensesSumsToPie[key] }})',
+                            y: {{ data.expensesSumsToPie[key] }}
+                        },
+                        {% endfor %}
+                    ]
+        }]
+    });
+</script>
 
 {% endblock %}
