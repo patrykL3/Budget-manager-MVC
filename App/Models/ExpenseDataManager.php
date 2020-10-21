@@ -6,31 +6,14 @@ use PDO;
 use \App\Authentication;
 use \App\Date;
 
-/**
- * Expense data manager
- *
- * PHP version 7.0
- */
 class ExpenseDataManager extends \Core\Model
 {
-    /**
-     * Error messages
-     *
-     * @var array
-     */
     public $errors = [];
     public $userExpenseCategories;
     public $userPaymentCategories;
     private $loggedUser;
 
 
-    /**
-     * Class constructor
-     *
-     * @param array $data  Initial property values
-     *
-     * @return void
-     */
     public function __construct($data = [])
     {
         $this->loggedUser = Authentication::getLoggedUser();
@@ -43,11 +26,7 @@ class ExpenseDataManager extends \Core\Model
         };
     }
 
-    /**
-     * Save the expense with the current property values
-     *
-     * @return void
-     */
+
     public function addExpense()
     {
         $this->validateExpenseData();
@@ -60,11 +39,7 @@ class ExpenseDataManager extends \Core\Model
         return false;
     }
 
-    /**
-     * Validate current property values, adding valiation error messages to the errors array property
-     *
-     * @return void
-     */
+
     private function validateExpenseData()
     {
         // Amount
@@ -254,23 +229,23 @@ class ExpenseDataManager extends \Core\Model
     {
         print_r($data);
         if (ExpenseDataManager::validateExpenseEditData($data)) {
-        $database = static::getDB();
-        $selectedCategoryId = ExpenseDataManager::getSelectedCategoryIdToEdit($data['category']);
-        $selectedPaymentCategoryId = ExpenseDataManager::getSelectedPaymentCategoryIdToEdit($data['payment_category']);
+            $database = static::getDB();
+            $selectedCategoryId = ExpenseDataManager::getSelectedCategoryIdToEdit($data['category']);
+            $selectedPaymentCategoryId = ExpenseDataManager::getSelectedPaymentCategoryIdToEdit($data['payment_category']);
 
-        $editExpense = $database->prepare(
-            'UPDATE expenses
+            $editExpense = $database->prepare(
+                'UPDATE expenses
                 SET expense_category_id = :expense_category_id, payment_category_id = :payment_category_id, amount = :amount, date_of_expense = :date_of_expense, expense_comment = :expense_comment
                 WHERE expense_id = :expense_id;
                 '
-        );
-        $editExpense->bindValue(':expense_id', $data['expense_id'], PDO::PARAM_INT);
-        $editExpense->bindValue(':expense_category_id', $selectedCategoryId, PDO::PARAM_INT);
-        $editExpense->bindValue(':payment_category_id', $selectedPaymentCategoryId, PDO::PARAM_INT);
-        $editExpense->bindValue(':amount', $data['amount'], PDO::PARAM_STR);
-        $editExpense->bindValue(':date_of_expense', $data['date'], PDO::PARAM_STR);
-        $editExpense->bindValue(':expense_comment', $data['comment'], PDO::PARAM_STR);
-        $editExpense->execute();
+            );
+            $editExpense->bindValue(':expense_id', $data['expense_id'], PDO::PARAM_INT);
+            $editExpense->bindValue(':expense_category_id', $selectedCategoryId, PDO::PARAM_INT);
+            $editExpense->bindValue(':payment_category_id', $selectedPaymentCategoryId, PDO::PARAM_INT);
+            $editExpense->bindValue(':amount', $data['amount'], PDO::PARAM_STR);
+            $editExpense->bindValue(':date_of_expense', $data['date'], PDO::PARAM_STR);
+            $editExpense->bindValue(':expense_comment', $data['comment'], PDO::PARAM_STR);
+            $editExpense->execute();
         }
     }
 

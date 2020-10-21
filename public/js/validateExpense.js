@@ -1,7 +1,3 @@
-/**
- * Add jQuery Validation plugin method for a valid category
- *
- */
 $.validator.addMethod('validCategory',
     function(value, element, param) {
 
@@ -15,34 +11,39 @@ $.validator.addMethod('validCategory',
 
 $(document).ready(function() {
 
-
-        /**
-         * Validate the form
-         */
-        $('#formExpense').validate({
-            rules: {
-                amount: 'required',
-                date: 'required',
-                expense_category: {
-                    required: true,
-                    validCategory: true
-                },
-                payment_category: {
-                    required: true,
-                    validCategory: true
-                }
+    let validatorExpense = $('#formExpense').validate({
+        rules: {
+            amount: 'required',
+            date: 'required',
+            expense_category: {
+                required: true,
+                validCategory: true
             },
-            messages: {
-                amount: 'Wprowadż kwotę!',
-                date: 'Wprowadź datę!',
-                expense_category: {
-                    required: 'Wprowadż kategorię!',
-                    validCategory: 'Wprowadź kategorię wydatku!'
-                },
-                payment_category: {
-                    required: 'Wprowadż kategorię!',
-                    validCategory: 'Wprowadź metodę płatności!'
-                }
+            payment_category: {
+                required: true,
+                validCategory: true
             }
-        });
+        },
+        messages: {
+            amount: 'Wprowadż kwotę!',
+            date: 'Wprowadź datę!',
+            expense_category: {
+                required: 'Wprowadż kategorię!',
+                validCategory: 'Wprowadź kategorię wydatku!'
+            },
+            payment_category: {
+                required: 'Wprowadż kategorię!',
+                validCategory: 'Wprowadź metodę płatności!'
+            }
+        }
     });
+
+    $('#edit-expense-modal').on('show.bs.modal', function() {
+        validatorExpense.resetForm();
+    });
+
+    $('#edit-expense-modal').on('hide.bs.modal', function() {
+        validatorExpense.resetForm();
+    });
+
+});

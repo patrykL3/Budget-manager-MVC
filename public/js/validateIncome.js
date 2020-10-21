@@ -1,7 +1,3 @@
-/**
- * Add jQuery Validation plugin method for a valid category
- *
- */
 $.validator.addMethod('validCategory',
     function(value, element, param) {
 
@@ -14,10 +10,8 @@ $.validator.addMethod('validCategory',
 );
 
 $(document).ready(function() {
-    /**
-     * Validate the form
-     */
-    var validator = $('#formIncome').validate({
+
+    let validatorIncome = $('#formIncome').validate({
         rules: {
             amount: 'required',
             date: 'required',
@@ -37,11 +31,11 @@ $(document).ready(function() {
     });
 
     $('#edit-income-modal').on('show.bs.modal', function() {
-        validator.resetForm();
+        validatorIncome.resetForm();
     });
 
     $('#edit-income-modal').on('hide.bs.modal', function() {
-        validator.resetForm();
+        validatorIncome.resetForm();
     });
 
 });

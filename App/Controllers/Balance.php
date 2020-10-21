@@ -5,11 +5,6 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Models\PeriodDataManager;
 
-/**
- * Balance controller
- *
- * PHP version 7.0
- */
 class Balance extends Authentication_login
 {
     public function openAction()

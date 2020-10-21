@@ -46,8 +46,6 @@ class View
         if ($twig === null) {
             $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . '/App/Views');
             $twig = new \Twig_Environment($loader);
-            //$twig->addGlobal('session', $_SESSION);
-            //$twig->addGlobal('is_logged_in', \App\Authentication::isLoggedIn());
             $twig->addGlobal('current_user', \App\Authentication::getLoggedUser());
             $twig->addGlobal('flash_messages', \App\Flash::getMessages());
         }

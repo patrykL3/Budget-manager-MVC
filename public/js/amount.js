@@ -4,8 +4,9 @@ $(document).ready(function() {
     let regularExpresionEntireAmount = new RegExp(/\....$|,...$|,,$|\.\.$|,\.$|\.,$/, 'i');
 
     $('.amount').bind("keypress", function(event) {
+        let backspaceASCII = 8;
 
-        if (event.which != 8) {
+        if (event.which != backspaceASCII) {
 
             let currentChar = String.fromCharCode(event.which);
             let fullValue = $(this).val() + currentChar;

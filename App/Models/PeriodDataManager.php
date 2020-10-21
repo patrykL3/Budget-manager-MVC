@@ -8,11 +8,6 @@ use \App\Models\IncomeDataManager;
 use \App\Models\ExpenseDataManager;
 use \App\Date;
 
-/**
- * Income data manager
- *
- * PHP version 7.0
- */
 class PeriodDataManager extends \Core\Model
 {
     private $incomeDataManager;
@@ -33,14 +28,6 @@ class PeriodDataManager extends \Core\Model
     public $expensesSumsToPie= [];
 
 
-
-    /**
-     * Class constructor
-     *
-     * @param array $data  Initial property values
-     *
-     * @return void
-     */
     public function __construct($period, $rangePeriod = [])
     {
         $this->incomeDataManager = new IncomeDataManager();
