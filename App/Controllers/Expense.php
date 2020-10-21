@@ -19,7 +19,7 @@ class Expense extends Authentication_login
 
     public function openAction()
     {
-        View::renderTemplate('expense/open.html', ['data' => $this->expenseDataManager]);
+        View::renderTemplate('Expense/open.html', ['data' => $this->expenseDataManager]);
     }
 
 

@@ -8,6 +8,6 @@ class Menu extends Authentication_login
 {
     public function openAction()
     {
-        View::renderTemplate('menu/open.html');
+        View::renderTemplate('Menu/open.html');
     }
 }

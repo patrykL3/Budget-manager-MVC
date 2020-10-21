@@ -19,7 +19,7 @@ class Income extends Authentication_login
 
     public function openAction()
     {
-        View::renderTemplate('income/open.html', ['data' => $this->incomeDataManager]);
+        View::renderTemplate('Income/open.html', ['data' => $this->incomeDataManager]);
     }
 
 
