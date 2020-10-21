@@ -5,44 +5,20 @@ namespace App\Models;
 use PDO;
 use \App\Token;
 
-/**
- * Example user model
- *
- * PHP version 7.0
- */
 class User extends \Core\Model
 {
-
-    /**
-     * Error messages
-     *
-     * @var array
-     */
     public $errors = [];
     public $expiry_timestamp;
 
-    //private static $database;
 
-    /**
-     * Class constructor
-     *
-     * @param array $data  Initial property values
-     *
-     * @return void
-     */
     public function __construct($data = [])
     {
-        //self::$database = static::getDB();
         foreach ($data as $key => $value) {
+            $value = filter_input(INPUT_POST, $key);
             $this->$key = $value;
         };
     }
 
-    /**
-     * Save the user model with the current property values
-     *
-     * @return void
-     */
     public function save()
     {
         $this->validateUserData();
@@ -70,11 +46,7 @@ class User extends \Core\Model
         return false;
     }
 
-    /**
-     * Validate current property values, adding valiation error messages to the errors array property
-     *
-     * @return void
-     */
+
     public function validateUserData()
     {
         // Name
@@ -112,6 +84,7 @@ class User extends \Core\Model
         }
     }
 
+
     protected function addUser($password_hash)
     {
         $sql = 'INSERT INTO users (login, name, surname, email, password)
@@ -127,6 +100,7 @@ class User extends \Core\Model
         $stmt->execute();
     }
 
+
     private function getUserId($login)
     {
         $database = static::getDB();
@@ -136,6 +110,7 @@ class User extends \Core\Model
         return $userIdQuery->fetch();
     }
 
+
     private function getIdDefaultPaymentMethods()
     {
         $database = static::getDB();
@@ -143,6 +118,7 @@ class User extends \Core\Model
         $idNumbersDefaultPaymentMethodsQuery->execute();
         return $idNumbersDefaultPaymentMethodsQuery->fetchAll();
     }
+
 
     private function getIdDefaultExpenses()
     {
@@ -152,6 +128,7 @@ class User extends \Core\Model
         return $idNumbersDefaultExpensesQuery->fetchAll();
     }
 
+
     private function getIdDefaultIncomes()
     {
         $database = static::getDB();
@@ -159,6 +136,7 @@ class User extends \Core\Model
         $idNumbersDefaultIncomesQuery->execute();
         return $idNumbersDefaultIncomesQuery->fetchAll();
     }
+
 
     private function addPaymentMethod($paymentMethodId, $userId)
     {
@@ -169,6 +147,7 @@ class User extends \Core\Model
         $addPaymentMethodQuery->execute();
     }
 
+
     private function addExpenseCategory($expenseCategoryId, $userId)
     {
         $database = static::getDB();
@@ -177,6 +156,7 @@ class User extends \Core\Model
         $addExpenseQuery->bindValue(':expense_category_id', $expenseCategoryId, PDO::PARAM_INT);
         $addExpenseQuery->execute();
     }
+
 
     private function addIncomeCategory($incomeCategoryId, $userId)
     {
@@ -187,25 +167,13 @@ class User extends \Core\Model
         $addIncomeQuery->execute();
     }
 
-    /**
-     * See if a user record already exists with the specified email
-     *
-     * @param string $email email address to search for
-     *
-     * @return boolean  True if a record already exists with the specified email, false otherwise
-     */
+
     public static function emailExists($email)
     {
         return static::findByEmail($email) !== false;
     }
 
-    /**
-     * See if a user record already exists with the specified login
-     *
-     * @param string $login login address to search for
-     *
-     * @return boolean  True if a record already exists with the specified login, false otherwise
-     */
+
     public static function loginExists($login)
     {
         $sql = 'SELECT * FROM users WHERE login = :login';
@@ -219,13 +187,7 @@ class User extends \Core\Model
         return $stmt->fetch() !== false;
     }
 
-    /**
-     * Find a user model by email address
-     *
-     * @param string $email email address to search for
-     *
-     * @return mixed User object if found, false otherwise
-     */
+
     public static function findByEmail($email)
     {
         $sql = 'SELECT * FROM users WHERE email = :email';
@@ -241,20 +203,35 @@ class User extends \Core\Model
         return $stmt->fetch();
     }
 
-    /**
- * Authenticate a user by email and password.
- *
- * @param string $email email address
- * @param string $password password
- *
- * @return mixed  The user object or false if authentication fails
- */
-    public static function authenticate($email, $password)
+
+    public static function findByLogin($login)
     {
-        $user = static::findByEmail($email);
+        $sql = 'SELECT * FROM users WHERE login = :login';
+
+        $database = static::getDB();
+        $stmt = $database->prepare($sql);
+        $stmt->bindValue(':login', $login, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+
+    public static function authenticate($loginData = [])
+    {
+        $loginData['email_or_login'] = filter_input(INPUT_POST, 'email_or_login');
+        $loginData['password'] = filter_input(INPUT_POST, 'password');
+
+        $user = static::findByEmail($loginData['email_or_login']);
+        if (!$user) {
+            $user = static::findByLogin($loginData['email_or_login']);
+        }
 
         if ($user) {
-            if (password_verify($password, $user->password)) {
+            if (password_verify($loginData['password'], $user->password)) {
                 return $user;
             }
         }
@@ -263,13 +240,7 @@ class User extends \Core\Model
         return false;
     }
 
-    /**
-     * Find a user model by ID
-     *
-     * @param string $id The user ID
-     *
-     * @return mixed User object if found, false otherwise
-     */
+
     public static function findByID($id)
     {
         $sql = 'SELECT * FROM users WHERE user_id = :id';
@@ -285,12 +256,7 @@ class User extends \Core\Model
         return $stmt->fetch();
     }
 
-    /**
-     * Remember the login by inserting a new unique token into the remembered_logins table
-     * for this user record
-     *
-     * @return boolean  True if the login was remembered successfully, false otherwise
-     */
+
     public function rememberLogin()
     {
         $token = new Token();
