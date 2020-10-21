@@ -16,7 +16,7 @@ class Balance extends Authentication_login
             $periodDataManager->createData();
         }
 
-        View::renderTemplate('balance/open.html', ['data' => $periodDataManager]);
+        View::renderTemplate('Balance/open.html', ['data' => $periodDataManager]);
     }
 
 
