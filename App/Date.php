@@ -9,8 +9,14 @@ namespace App;
  */
 class Date
 {
+    public static function getCurrentDate()
+    {
+        date_default_timezone_set('Europe/Warsaw');
+        return date('Y/m/d');
+    }
+
     /**
-     * Add a message
+     * Checked date
      *
      * @param string $date  The date to checked
      *

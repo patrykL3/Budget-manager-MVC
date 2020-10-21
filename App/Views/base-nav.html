@@ -35,19 +35,19 @@
                 </li>
 
                 <li class="nav-item dropdown {% block list_class_balance %}{% endblock %}">
-                    <a class="nav-link dropdown-toggle {% block link_class_balance %}{% endblock %}" data-toggle="dropdown" href="/balance">
+                    <a class="nav-link dropdown-toggle {% block link_class_balance %}{% endblock %}" data-toggle="dropdown">
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pie-chart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                             <path d="M15.985 8.5H8.207l-5.5 5.5a8 8 0 0 0 13.277-5.5zM2 13.292A8 8 0 0 1 7.5.015v7.778l-5.5 5.5zM8.5.015V7.5h7.485A8.001 8.001 0 0 0 8.5.015z" />
                         </svg>
                         Przeglądaj bilans</a>
                     <div class="dropdown-menu">
-                        <a id="current-month" class="dropdown-item " href="balance.php?link=current_month" name="current_month">Obecny miesiąc</a>
+                        <a id="current-month" class="dropdown-item " href="/balance/open?period=currentMonth" name="current_month">Obecny miesiąc</a>
                         <div class="dropdown-divider"></div>
-                        <a id="previous-month" class="dropdown-item" href="balance.php?link=previous_month" name="previous_month">Poprzedni miesiąc</a>
+                        <a id="previous-month" class="dropdown-item" href="/balance/open?period=previousMonth" name="previous_month">Poprzedni miesiąc</a>
                         <div class="dropdown-divider"></div>
-                        <a id="current-year" class="dropdown-item" href="balance.php?link=current_year" name="current_year">Obecny rok</a>
+                        <a id="current-year" class="dropdown-item" href="/balance/open?period=currentYear" name="current_year">Obecny rok</a>
                         <div class="dropdown-divider"></div>
-                        <a id="custom" class="dropdown-item" href="balance.php?link=custom" name="custom">Niestandardowy</a>
+                        <a id="custom" class="dropdown-item" href="/balance/open?period=custom" name="custom">Niestandardowy</a>
                     </div>
                 </li>
                 <li class="nav-item {% block list_class_settings %}{% endblock %}">

@@ -14,7 +14,7 @@ label.error {
     display:block; /* change the display to block*/
     width: 380px;
     font-size:12px;
-    color:red;
+    color:blue;
     padding:3px;
     margin-left:55px;
     margin-bottom: 1px;
@@ -39,8 +39,13 @@ label.error {
     width: 380px;
 }
 
+
 .max-width-4 {
     max-width: 160px;
+}
+
+.max-width-3 {
+    max-width: 170px;
 }
 
 .min-width-4 {
