@@ -21,6 +21,10 @@ label.error {
     padding-bottom: 1px;
 }
 
+.hoverDarker:hover {
+    color: #0033cc !important;
+}
+
 .alert-info {
     background-color: #d9edf7;
 }
