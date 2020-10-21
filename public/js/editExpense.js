@@ -50,15 +50,6 @@ $(document).ready(function() {
 
         let error = $('.form-control.error');
 
-        console.log(expense_id);
-        console.log(amount);
-        console.log(date);
-        console.log(category);
-        console.log(payment_category);
-        console.log(comment);
-
-
-
         if (!error.length) {
             $.ajax({
                 type: "POST",
@@ -77,8 +68,6 @@ $(document).ready(function() {
                     $(getExpenseSpanId("#amountExpenseId", expense_id)).text(amount);
                     $(getExpenseSpanId("#dateExpenseId", expense_id)).text(date);
                     $(getExpenseSpanId("#paymentCategoryExpenseId", expense_id)).text(setPaymentMethodSpan(payment_category));
-
-
 
                     let commentSpanId = getExpenseSpanId("#commentExpenseId", expense_id);
                     if (comment != "") {

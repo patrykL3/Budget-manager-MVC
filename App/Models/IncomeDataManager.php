@@ -6,30 +6,13 @@ use PDO;
 use \App\Authentication;
 use \App\Date;
 
-/**
- * Income data manager
- *
- * PHP version 7.0
- */
 class IncomeDataManager extends \Core\Model
 {
-    /**
-     * Error messages
-     *
-     * @var array
-     */
     public $errors = [];
     public $userIncomeCategories;
     private $loggedUser;
 
 
-    /**
-     * Class constructor
-     *
-     * @param array $data  Initial property values
-     *
-     * @return void
-     */
     public function __construct($data = [])
     {
         $this->loggedUser = Authentication::getLoggedUser();
@@ -41,11 +24,7 @@ class IncomeDataManager extends \Core\Model
         };
     }
 
-    /**
-     * Save the income with the current property values
-     *
-     * @return void
-     */
+
     public function addIncome()
     {
         $this->validateIncomeData();
@@ -58,11 +37,7 @@ class IncomeDataManager extends \Core\Model
         return false;
     }
 
-    /**
-     * Validate current property values, adding valiation error messages to the errors array property
-     *
-     * @return void
-     */
+
     public function validateIncomeData()
     {
         // Amount

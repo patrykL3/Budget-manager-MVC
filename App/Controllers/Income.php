@@ -6,11 +6,7 @@ use \Core\View;
 
 use \App\Models\IncomeDataManager;
 use \App\Flash;
-/**
- * Income controller
- *
- * PHP version 7.0
- */
+
 class Income extends Authentication_login
 {
     private $incomeDataManager;
@@ -21,21 +17,12 @@ class Income extends Authentication_login
     }
 
 
-    /**
-     * Show the Income page
-     *
-     * @return void
-     */
     public function openAction()
     {
         View::renderTemplate('income/open.html', ['data' => $this->incomeDataManager]);
     }
 
-    /**
- * Create a new income
- *
- * @return void
- */
+
     public function createAction()
     {
         if ($this->incomeDataManager->addIncome()) {

@@ -6,11 +6,7 @@ use \Core\View;
 
 use \App\Models\ExpenseDataManager;
 use \App\Flash;
-/**
- * Income controller
- *
- * PHP version 7.0
- */
+
 class Expense extends Authentication_login
 {
     private $expenseDataManager;
@@ -21,21 +17,12 @@ class Expense extends Authentication_login
     }
 
 
-    /**
-     * Show the Expense page
-     *
-     * @return void
-     */
     public function openAction()
     {
         View::renderTemplate('expense/open.html', ['data' => $this->expenseDataManager]);
     }
 
-    /**
- * Create a new expense
- *
- * @return void
- */
+
     public function createAction()
     {
         if ($this->expenseDataManager->addExpense()) {
