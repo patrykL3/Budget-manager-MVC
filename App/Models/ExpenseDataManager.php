@@ -227,7 +227,6 @@ class ExpenseDataManager extends \Core\Model
 
     public static function updateExpense($data = [])
     {
-        print_r($data);
         if (ExpenseDataManager::validateExpenseEditData($data)) {
             $database = static::getDB();
             $selectedCategoryId = ExpenseDataManager::getSelectedCategoryIdToEdit($data['category']);
@@ -325,4 +324,27 @@ class ExpenseDataManager extends \Core\Model
             echo "<br>".$e->getMessage();
         };
     }
+
+
+
+    public static function getExpenseCategoryData($expenseCategoryId)
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        $userExpenseCategoryToEditQuery = $database->prepare(
+            "SELECT ec.category_type, uce.killer_feature, uce.killer_feature_value
+            FROM users_categories_expenses AS uce
+            INNER JOIN expenses_categories AS ec
+            ON uce.expense_category_id = ec.expense_category_id
+            WHERE uce.user_id = :user_id AND ec.expense_category_id = :expense_category_id_to_edit;"
+        );
+
+        $userExpenseCategoryToEditQuery->bindValue(':expense_category_id_to_edit', $expenseCategoryId, PDO::PARAM_INT);
+        $userExpenseCategoryToEditQuery->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+        $userExpenseCategoryToEditQuery->execute();
+        return $userExpenseCategoryToEditQuery->fetch();
+    }
+
+
 }

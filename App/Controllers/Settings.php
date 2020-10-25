@@ -4,7 +4,8 @@ namespace App\Controllers;
 
 use \Core\View;
 
-//use \App\Models\IncomeDataManager;
+use \App\Models\SettingsDataManager;
+
 //use \App\Flash;
 
 class Settings extends Authentication_login
@@ -13,25 +14,68 @@ class Settings extends Authentication_login
 
     public function __construct()
     {
-        //$this->incomeDataManager = new IncomeDataManager($_POST);
+        //$this->settingsDataManager = new settingsDataManager($_POST);
     }
 
 
     public function openAction()
     {
-        View::renderTemplate('Settings/open.html');//, ['data' => $this->incomeDataManager]);
+        $settingsDataManager = new SettingsDataManager($_POST);
+        View::renderTemplate('Settings/open.html', ['data' => $settingsDataManager]);
     }
 
-/*
-    public function createAction()
+
+    public function getDataToEditExpenseCategoryAction()
     {
-        if ($this->incomeDataManager->addIncome()) {
-            Flash::addMessage('Dodano nowy przychód');
-            $this->redirect('/income');
-            exit;
-        } else {
-            View::renderTemplate('Income/open.html', ['data' => $this->incomeDataManager]);
-        }
+        $expenseCategoryIdToEdit = $_POST['expenseCategoryId'];
+        $expenseCategoryToEdit = SettingsDataManager::getExpenseCategoryData($expenseCategoryIdToEdit);
+
+        echo json_encode($expenseCategoryToEdit);
     }
-    */
+
+    public function getDataToEditUserDataAction()
+    {
+        $userData = SettingsDataManager::getUserData();
+
+        echo json_encode($userData);
+    }
+
+    public function updateUserDataAction()
+    {
+        SettingsDataManager::updateUserData($_POST);
+    }
+
+    public function updateUserPasswordAction()
+    {
+        $error = false;
+
+        if (!SettingsDataManager::updateUserPassword($_POST)) {
+            $error = true;
+        }
+        echo json_encode($error);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+        public function createAction()
+        {
+            if ($this->incomeDataManager->addIncome()) {
+                Flash::addMessage('Dodano nowy przychód');
+                $this->redirect('/income');
+                exit;
+            } else {
+                View::renderTemplate('Income/open.html', ['data' => $this->incomeDataManager]);
+            }
+        }
+        */
 }

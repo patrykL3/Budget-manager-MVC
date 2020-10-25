@@ -14,21 +14,21 @@
         <div class="row justify-content-center">
             <div class="width-2 mt-2 mb-4">
 
-                <button id="user-data" type="submit" class="btn btn-primary btn-lg btn-block mt-3 mb-2" data-target="#edit-user-data" data-toggle="modal">
+                <button id="user-data" class="btn btn-primary btn-lg btn-block mt-3 mb-2" data-target="#edit-user-data-modal" data-toggle="modal">
                     Dane użytkownika
                     <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
                     </svg>
                 </button>
 
-                <div class="modal fade" id="edit-user-data">
+                <div class="modal fade" id="edit-user-data-modal">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header justify-content-center">
                                 <h3 class="h4 font-weight-bold">Edytuj Dane użytkownika</h3>
                             </div>
                             <div>
-                                <form id="formExpense" method="post" action="">
+                                <form id="formUserData" method="post" action="">
                                     <div class="modal-body">
                                         <div class="input-group mb-2 mr-sm-2">
                                             <div class="input-group-prepend">
@@ -38,7 +38,7 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Imię" value="{{ data.userData[key].name }}">
+                                            <input type="text" id="userName" name="name" class="form-control" placeholder="Imię">
                                         </div>
                                         <div class="input-group mb-2 mr-sm-2">
                                             <div class="input-group-prepend">
@@ -48,7 +48,7 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Nazwisko" value="{{ data.userData[key].surname }}">
+                                            <input type="text" id="userSurname" name="surname" class="form-control" placeholder="Nazwisko">
                                         </div>
 
                                         <div class="input-group mb-2 mr-sm-2">
@@ -60,7 +60,7 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <input type="text" class="form-control" id="formInputGroupEmail" placeholder="E-mail" value="{{ data.userData[key].email }}">
+                                            <input type="text" id="userEmail" name="email" class="form-control" placeholder="E-mail">
                                         </div>
 
                                         <div class="row justify-content-around">
@@ -80,6 +80,7 @@
                                                     <path fill-rule="evenodd" d="M15.854 10.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708l1.146 1.147 2.646-2.647a.5.5 0 0 1 .708 0z" />
                                                 </svg>
                                             </button>
+
                                         </div>
                                     </div>
                                 </form>
@@ -116,7 +117,7 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <input type="password" class="form-control" placeholder="Stare hasło" autocomplete="off">
+                                            <input type="password" id="oldPassword" class="form-control" name="oldPassword" placeholder="Stare hasło" autocomplete="off">
                                         </div>
                                         <div class="input-group mb-2 mr-sm-2">
                                             <div class="input-group-prepend">
@@ -127,7 +128,7 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <input type="password" class="form-control" placeholder="Nowe hasło" autocomplete="off">
+                                            <input id="newPassword" type="password" class="form-control" name="newPassword" placeholder="Nowe hasło" autocomplete="off">
                                         </div>
 
                                         <div class="input-group mb-2 mr-sm-2">
@@ -139,8 +140,9 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <input type="password" class="form-control" placeholder="Powtórz nowe hasło" autocomplete="off">
+                                            <input type="password" id="newPasswordConfirmation" class="form-control" name="newPasswordConfirmation" placeholder="Powtórz nowe hasło" autocomplete="off">
                                         </div>
+                                        <div id="incorrectPasswordData" class="text-primary mb-2 w-100 text-5 row justify-content-center" hidden>Niepoprawne dane!</div>
 
                                         <div class="row justify-content-around">
                                             <a href="#" class="btn btn-danger btn-lg btn-inline mt-3 cancel">
@@ -178,6 +180,7 @@
                     </svg>
                 </button>
                 <div id="categories-of-expenses" class="standardHidden" hidden>
+                    {% for key in data.userExpenseCategories|keys %}
                     <div class="row">
                         <div class="col-10">
                             <div class="input-group mb-2 mr-sm-2">
@@ -189,12 +192,12 @@
                                         </svg>
                                     </div>
                                 </div>
-                                <input type="text" class="form-control" value="Jedzenie" disabled>
+                                <input type="text" class="form-control" value="{{ data.userExpenseCategories[key].category_type }}" disabled>
                             </div>
                         </div>
                         <div class="col-2 pb-1 pt-1 pr-1 pl-0">
                             <span>
-                                <a id="{{ data.userCategoriesExpenses[key].expence_category_id }}" class='editExpenceCategory' href="" data-target="#edit-expence-category-modal" data-toggle="modal" role="button">
+                                <a id="{{ data.userExpenseCategories[key].expense_category_id }}" class='editExpenseCategory' href="" data-target="#edit-expence-category-modal" data-toggle="modal" role="button">
                                     <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='bi bi-pen text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
                                         <path fill-rule='evenodd'
                                             d='M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z' />
@@ -211,6 +214,7 @@
                             </span>
                         </div>
                     </div>
+                    {% endfor %}
 
                     <div class="row">
                         <div class="col-10">
@@ -254,11 +258,11 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <input type="text" class="form-control" placeholder="Kategoria wydatku" value="">
+                                            <input id="expenseCategoryType" type="text" class="form-control" placeholder="Kategoria wydatku" value="">
                                         </div>
                                         <div class="form-check pl-4 mb-2 mt-3">
                                             <input class="form-check-input" type="checkbox" name="killer" id="killerCheckbox">
-                                            <label class="form-check-label" for="inlineFormCheck">
+                                            <label class="form-check-label" for="killerCheckbox">
                                                 Włącz miesięczny limit dla kategorii
                                             </label>
                                         </div>
@@ -490,5 +494,10 @@
 <script src="/js/hideModal.js"></script>
 <script src="js/hide.js"></script>
 <script src="js/editExpenseCategory.js"></script>
+<script src="js/validateEditUserData.js"></script>
+<script src="js/editUserData.js"></script>
+<script src="js/validateEditPassword.js"></script>
+<script src="js/editPassword.js"></script>
+
 
 {% endblock %}

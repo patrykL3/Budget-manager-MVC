@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $('#edit-categories-of-expenses').click(function() {
+/*    $('#edit-categories-of-expenses').click(function() {
         if ($('#categories-of-expenses').attr('hidden') === 'hidden')
             $('#categories-of-expenses').removeAttr('hidden');
         else
@@ -20,6 +20,7 @@ $(document).ready(function() {
         else
             $('#categories-of-payment').attr('hidden', 'hidden');
     });
+    */
 
     $(".show").click(function() {
         let clickedShapeId = $(this).attr('id');

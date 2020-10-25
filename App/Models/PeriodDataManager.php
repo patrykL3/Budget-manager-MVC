@@ -21,7 +21,7 @@ class PeriodDataManager extends \Core\Model
     public $incomesFromPeriod;
     public $expensesFromPeriod;
     public $userIncomeCategories = [];
-    public $userExpenceCategories = [];
+    public $userExpenseCategories = [];
     public $userPaymentCategories = [];
 
     public $balanceValue;
