@@ -45,6 +45,10 @@ label.error {
     width: 380px;
 }
 
+.width-3 {
+    width: 420px;
+}
+
 .max-width-4 {
     max-width: 160px;
 }

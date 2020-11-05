@@ -14,12 +14,9 @@ class SettingsDataManager extends \Core\Model
     private $expenseDataManager;
     private $user;
 
-    public $errors = [];
-
     public $userIncomeCategories = [];
     public $userExpenseCategories = [];
     public $userPaymentCategories = [];
-    //public $userData = [];
 
 
     public function __construct($data = [])
@@ -55,10 +52,38 @@ class SettingsDataManager extends \Core\Model
         return User::updateUserPassword($data);
     }
 
+    public static function updateUserExpenseCategory($data = [])
+    {
+        return ExpenseDataManager::updateUserExpenseCategory($data);
+    }
 
+    public static function deleteUserExpenseCategory($expenseCategoryIdToDelete)
+    {
+        ExpenseDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
+    }
 
+    public static function whetherExpenseCategoryIsUsedByUser($expenseCategoryId)
+    {
+        $usedUserExpenseCategories = ExpenseDataManager::getIdUsedUserExpenseCategories();
 
+        foreach ($usedUserExpenseCategories as $onceOfUserCategories) {
+            if ($onceOfUserCategories['expense_category_id'] === $expenseCategoryId) {
+                return true;
+            }
+        }
 
+        return false;
+    }
+
+    public static function deleteUserExpensesInSelectedCategory($expenseCategoryId)
+    {
+        ExpenseDataManager::deleteUserExpensesInSelectedCategory($expenseCategoryId);
+    }
+
+    public static function moveUserExpensesFromSelectedCategory($expenseSelectedCategoryId, $categoryToCarryOverExpenses)
+    {
+        ExpenseDataManager::moveUserExpensesFromSelectedCategory($expenseSelectedCategoryId, $categoryToCarryOverExpenses);
+    }
 
 
 
@@ -73,13 +98,29 @@ class SettingsDataManager extends \Core\Model
         return ExpenseDataManager::getExpenseData($expenseId);
     }
 
-    public static function updateExpense($data = [])
-    {
-        ExpenseDataManager::updateExpense($data);
-    }
-
     public static function deleteExpense($expenseIdToDelete)
     {
         ExpenseDataManager::deleteExpense($expenseIdToDelete);
     }
+
+    public static function addNewExpenseCategory($newExpenseCategory)
+    {
+        ExpenseDataManager::addExpenseCategory($newExpenseCategory, 0, 0);
+    }
+
+    public static function isCategoryAssignedToUser($expenseCategory)
+    {
+        return ExpenseDataManager::isCategoryAssignedToUser($expenseCategory);
+    }
+
+    public static function getExpenseCategoryId($expenseCategory)
+    {
+        return ExpenseDataManager::getExpenseCategoryId($expenseCategory);
+    }
+/*
+    public static function validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType)
+    {
+        return ExpenseDataManager::validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType);
+    }
+    */
 }

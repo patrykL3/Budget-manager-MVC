@@ -226,6 +226,12 @@ class User extends \Core\Model
         $loginData['email_or_login'] = filter_input(INPUT_POST, 'email_or_login');
         $loginData['password'] = filter_input(INPUT_POST, 'password');
 
+        /*********************************/
+            $loginData['email_or_login'] = 'zxc';
+            $loginData['password'] = 'Zxc123';
+        /*********************************/
+
+
         $user = static::findByEmail($loginData['email_or_login']);
         if (!$user) {
             $user = static::findByLogin($loginData['email_or_login']);

@@ -1,10 +1,12 @@
 $(document).ready(function() {
 
     let expenseCategoryId;
+    let rowWithExpenseCategoryToEdit;
 
-    $(".editExpenseCategory").click(function() {
-
-        expenseCategoryId = $(this).attr("id");
+    $(document).on('click', '.editExpenseCategory', function() {
+        let linkId = $(this).attr("id");
+        expenseCategoryId = getExpenseCategoryId(linkId);
+        rowWithExpenseCategoryToEdit = (($(this).parent()).parent()).parent();
 
         $.ajax({
             type: "POST",
@@ -31,6 +33,58 @@ $(document).ready(function() {
         });
     });
 
+    $("#formExpenseCategory").on("submit", function(e) {
+        let newCategoryType = $('#expenseCategoryType').val();
+        let newKillerFeature = $("#killerCheckbox").is(':checked');
+        let newKillerFeatureValue = $("#categoryLimit").val();
+
+
+        let error = $('.form-control.error');
+
+        if (!error.length) {
+            $.ajax({
+                type: "POST",
+                url: "/Settings/updateExpenseCategory",
+                data: {
+                    expenseCategoryId: expenseCategoryId,
+                    newCategoryType: newCategoryType,
+                    newKillerFeature: newKillerFeature,
+                    newKillerFeatureValue: newKillerFeatureValue
+                },
+                success: function(data) {
+                    if (data) {
+                        let newExpenseCategoryId = data;
+                        rowWithExpenseCategoryToEdit.remove();
+                        createNewDivWithExpenseCategory(newExpenseCategoryId, newCategoryType);
+                    }
+                    $("#edit-expence-category-modal").modal('hide');
+                }
+            });
+            e.preventDefault();
+        }
+        //e.preventDefault();
+    });
+
+    function createNewDivWithExpenseCategory(newExpenseCategoryId, newCategoryType) {
+        let newIdInputWithCategory = createNewId("valueExpenseCategoryId", newExpenseCategoryId);
+        let newEditCategoryLinkId = createNewId("editExpenseCategoryId", newExpenseCategoryId);
+        let newDeleteCategoryLinkId = createNewId("deleteExpenseCategoryId", newExpenseCategoryId);
+        newCategoryType = newCategoryType.toLowerCase();
+        newCategoryType = newCategoryType.substr(0, 1).toUpperCase() + newCategoryType.substr(1);
+
+        newCategoryDiv = ($(".onceOfExpenseCategoryRow").last()).clone();
+        newCategoryDiv.insertAfter($(".onceOfExpenseCategoryRow").last());
+        newCategoryDiv.find('input').val(newCategoryType);
+        newCategoryDiv.find('input').prop('id', newIdInputWithCategory);
+        newCategoryDiv.find('.editExpenseCategory').prop('id', newEditCategoryLinkId);
+        newCategoryDiv.find('.deleteUserExpenseCategory').prop('id', newDeleteCategoryLinkId);
+    }
+
+    function createNewId(baseSpan, newId) {
+        let fullId = baseSpan.concat(newId);
+
+        return fullId;
+    }
 
     $("#killerCheckbox").change(function() {
         if (this.checked) {
@@ -52,6 +106,11 @@ $(document).ready(function() {
         $("#iconNoProtected").removeAttr('hidden');
         $("#categoryLimit").attr('disabled', 'disabled');
         $("#killerCheckbox").prop("checked", false);
+    }
+
+    function getExpenseCategoryId(linkId) {
+        let expenseCategoryId = linkId.replace("editExpenseCategoryId", "");
+        return expenseCategoryId;
     }
 
 });

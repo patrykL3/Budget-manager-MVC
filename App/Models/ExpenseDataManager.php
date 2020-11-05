@@ -229,7 +229,7 @@ class ExpenseDataManager extends \Core\Model
     {
         if (ExpenseDataManager::validateExpenseEditData($data)) {
             $database = static::getDB();
-            $selectedCategoryId = ExpenseDataManager::getSelectedCategoryIdToEdit($data['category']);
+            $selectedCategoryId = ExpenseDataManager::getSelectedCategoryId($data['category']);
             $selectedPaymentCategoryId = ExpenseDataManager::getSelectedPaymentCategoryIdToEdit($data['payment_category']);
 
             $editExpense = $database->prepare(
@@ -248,7 +248,7 @@ class ExpenseDataManager extends \Core\Model
         }
     }
 
-    public static function getSelectedCategoryIdToEdit($selectedCategory)
+    public static function getSelectedCategoryId($selectedCategory)
     {
         $LoggedUserId = Authentication::getLoggedUser()->user_id;
         $userExpenseCategories = ExpenseDataManager::getUserExpenseCategories($LoggedUserId);
@@ -325,6 +325,52 @@ class ExpenseDataManager extends \Core\Model
         };
     }
 
+    public static function deleteUserExpensesInSelectedCategory($expenseCategoryId)
+    {
+        $expenseCategoryId = filter_var($expenseCategoryId, FILTER_VALIDATE_INT);
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        try {
+            $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $database->exec(
+                "DELETE FROM expenses, users_expenses
+                USING expenses
+                INNER JOIN users_expenses
+                ON expenses.expense_id = users_expenses.expense_id
+                WHERE expense_category_id=$expenseCategoryId AND user_id=$loggedUser->user_id"
+            );
+        } catch (PDOException $e) {
+            echo "<br>".$e->getMessage();
+        };
+    }
+
+
+
+    public static function moveUserExpensesFromSelectedCategory($expenseSelectedCategoryId, $categoryToCarryOverExpenses)
+    {
+        $expenseSelectedCategoryId = filter_var($expenseSelectedCategoryId, FILTER_VALIDATE_INT);
+        $categoryIdToCarryOverExpenses = ExpenseDataManager::getSelectedCategoryId($categoryToCarryOverExpenses);
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        $updateCategoriesExpenses = $database->prepare(
+            'UPDATE expenses AS e
+            INNER JOIN users_expenses AS ue
+            ON e.expense_id = ue.expense_id
+            SET e.expense_category_id = :new_expense_category_id
+            WHERE e.expense_category_id = :previous_expense_category_id AND ue.user_id = :user_id;
+            '
+        );
+        $updateCategoriesExpenses->bindValue(':new_expense_category_id', $categoryIdToCarryOverExpenses, PDO::PARAM_INT);
+        $updateCategoriesExpenses->bindValue(':previous_expense_category_id', $expenseSelectedCategoryId, PDO::PARAM_INT);
+        $updateCategoriesExpenses->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+        $updateCategoriesExpenses->execute();
+    }
+
+
+
+
 
 
     public static function getExpenseCategoryData($expenseCategoryId)
@@ -346,5 +392,180 @@ class ExpenseDataManager extends \Core\Model
         return $userExpenseCategoryToEditQuery->fetch();
     }
 
+    public static function updateUserExpenseCategory($data = [])
+    {
+        if (ExpenseDataManager::validateExpenseCategoryData($data)) {
+            ($data['newKillerFeature'] === "true") ? $data['newKillerFeature'] = 1 : $data['newKillerFeature'] = 0;
+            ExpenseDataManager::deleteUserExpenseCategory($data['expenseCategoryId']);
+            ExpenseDataManager::addExpenseCategory($data['newCategoryType'], $data['newKillerFeature'], $data['newKillerFeatureValue']);
 
+            echo ExpenseDataManager::getExpenseCategoryId($data['newCategoryType']);
+        }
+    }
+
+    private static function validateExpenseCategoryData($data = [])
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $userCurrentExpenseCategories = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
+
+        // categoryId
+        $data['expenseCategoryId'] = filter_input(INPUT_POST, 'expenseCategoryId');
+        $data['expenseCategoryId'] = filter_var($data['expenseCategoryId'], FILTER_VALIDATE_INT);
+        if (empty($data['expenseCategoryId'])) {
+            return false;
+        }
+
+        // Category;
+        $data['newCategoryType'] = filter_input(INPUT_POST, 'newCategoryType');
+        if (empty($data['newCategoryType'])) {
+            return false;
+        }
+        foreach ($userCurrentExpenseCategories as $onceOfCurrentCategories) {
+            if ($onceOfCurrentCategories['category_type'] === $data['newCategoryType'] && $onceOfCurrentCategories['expense_category_id'] != $data['expenseCategoryId']) {
+                return false;
+            }
+        }
+
+        // killerFeature
+        $data['newKillerFeatureValue'] = filter_input(INPUT_POST, 'newKillerFeatureValue');
+        $data['newKillerFeatureValue'] = str_replace(',', '.', $data['newKillerFeatureValue']);
+        $data['newKillerFeatureValue'] = filter_var($data['newKillerFeatureValue'], FILTER_VALIDATE_FLOAT);
+        if (empty($data['newKillerFeatureValue']) && $data['newKillerFeature'] != 'false') {
+            return false;
+        }
+
+        return true;
+    }
+/*
+    public static function validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType)
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $userCurrentExpenseCategories = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
+
+
+        foreach ($userCurrentExpenseCategories as $onceOfCurrentCategories) {
+            if ($onceOfCurrentCategories['category_type'] === $expenseCategoryType && $onceOfCurrentCategories['expense_category_id'] != $expenseCategoryId) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+*/
+    public static function deleteUserExpenseCategory($expenseCategoryIdToDelete)
+    {
+        $expenseCategoryIdToDelete = filter_var($expenseCategoryIdToDelete, FILTER_VALIDATE_INT);
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        try {
+            $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $database->exec("DELETE FROM users_categories_expenses WHERE user_id=$loggedUser->user_id AND expense_category_id=$expenseCategoryIdToDelete");
+        } catch (PDOException $e) {
+            echo "<br>".$e->getMessage();
+        };
+    }
+
+    public static function getIdUsedUserExpenseCategories()
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        $idUsedUserExpenseCategoriesQuery = $database->prepare(
+            "SELECT DISTINCT e.expense_category_id
+            FROM expenses AS e
+            INNER JOIN users_expenses AS ue
+            ON e.expense_id = ue.expense_id
+            WHERE ue.user_id = :user_id;"
+        );
+        $idUsedUserExpenseCategoriesQuery->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+        $idUsedUserExpenseCategoriesQuery->execute();
+        return $idUsedUserExpenseCategoriesQuery->fetchAll();
+    }
+
+
+    public static function addExpenseCategory($newExpenseCategory, $killerFeature, $killerFeatureValue)
+    {
+        $newExpenseCategory = strtolower($newExpenseCategory);
+        $newExpenseCategory = ucfirst($newExpenseCategory);
+
+        if (!ExpenseDataManager::isExpenseCategoryInTable($newExpenseCategory)) {
+            ExpenseDataManager::saveExpenseCategoryToExpensesCategoriesTabel($newExpenseCategory);
+        }
+        ExpenseDataManager::assignExpenseCategoryToUser($newExpenseCategory, $killerFeature, $killerFeatureValue);
+    }
+
+
+    public static function saveExpenseCategoryToExpensesCategoriesTabel($newExpenseCategory)
+    {
+        $database = static::getDB();
+
+        $assignIncomeToUserQuery = $database->prepare('INSERT INTO expenses_categories (category_type, default_type) VALUES (:category_type, :default_type)');
+        $assignIncomeToUserQuery->bindValue(':category_type', $newExpenseCategory, PDO::PARAM_STR);
+        $assignIncomeToUserQuery->bindValue(':default_type', 0, PDO::PARAM_INT);
+        $assignIncomeToUserQuery->execute();
+    }
+
+    public static function assignExpenseCategoryToUser($newExpenseCategory, $killerFeature, $killerFeatureValue)
+    {
+        $newExpenseCategoryId = ExpenseDataManager::getExpenseCategoryId($newExpenseCategory);
+        $loggedUser = Authentication::getLoggedUser();
+
+        $database = static::getDB();
+
+        $assignExpenseCategoryToUserQuery = $database->prepare(
+            'INSERT INTO users_categories_expenses (user_id, expense_category_id, killer_feature, killer_feature_value)
+            VALUES (:user_id, :expense_category_id, :killer_feature, :killer_feature_value)'
+        );
+
+        $assignExpenseCategoryToUserQuery->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+        $assignExpenseCategoryToUserQuery->bindValue(':expense_category_id', $newExpenseCategoryId, PDO::PARAM_INT);
+        $assignExpenseCategoryToUserQuery->bindValue(':killer_feature', $killerFeature, PDO::PARAM_INT);
+        $assignExpenseCategoryToUserQuery->bindValue(':killer_feature_value', $killerFeatureValue, PDO::PARAM_INT);
+        $assignExpenseCategoryToUserQuery->execute();
+    }
+
+
+
+
+
+    public static function getExpenseCategoryId($expenseCategory)
+    {
+        $database = static::getDB();
+
+        $expenseCategoryIdQuery = $database->prepare('SELECT expense_category_id FROM expenses_categories WHERE category_type = :category_type');
+        $expenseCategoryIdQuery->bindValue(':category_type', $expenseCategory, PDO::PARAM_STR);
+        $expenseCategoryIdQuery->execute();
+        $expenseCategoryId = $expenseCategoryIdQuery->fetch();
+
+        return $expenseCategoryId[0];
+    }
+
+    public static function isCategoryAssignedToUser($expenseCategory)
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $userExpenseCategories = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
+
+        $expenseCategory = strtolower($expenseCategory);
+        $expenseCategory = ucfirst($expenseCategory);
+
+        foreach ($userExpenseCategories as $onceOfCategories) {
+            if ($onceOfCategories['category_type'] === $expenseCategory) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function isExpenseCategoryInTable($expenseCategory)
+    {
+        $database = static::getDB();
+
+        $isExpenseCategoryInTableQuery = $database->prepare('SELECT distinct 1 category_type FROM expenses_categories WHERE category_type = :category_type');
+        $isExpenseCategoryInTableQuery->bindValue(':category_type', $expenseCategory, PDO::PARAM_STR);
+        $isExpenseCategoryInTableQuery->execute();
+        $isExpenseCategoryInTable = $isExpenseCategoryInTableQuery->fetch();
+
+        return $isExpenseCategoryInTable;
+    }
 }
