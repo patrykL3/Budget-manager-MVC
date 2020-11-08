@@ -27,9 +27,7 @@ class Settings extends Authentication_login
 
     public function updateExpenseCategory()
     {
-        $updateSuccess = SettingsDataManager::updateUserExpenseCategory($_POST);
-        //$updateSuccess = "a";
-        //echo json_encode($updateSuccess);
+        SettingsDataManager::updateUserExpenseCategory($_POST);
     }
 
     public function tryDeleteUserExpenseCategoryAction()
@@ -49,7 +47,7 @@ class Settings extends Authentication_login
         $expenseCategoryIdToDelete = $_POST['expenseCategoryId'];
 
         SettingsDataManager::deleteUserExpensesInSelectedCategory($expenseCategoryIdToDelete);
-        ////SettingsDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
+        SettingsDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
     }
 
     public function deleteUserExpenseCategoryWithMoveExpensesToAnotherCategoryAction()
@@ -57,8 +55,8 @@ class Settings extends Authentication_login
         $expenseCategoryIdToDelete = $_POST['expenseCategoryId'];
         $categoryToCarryOverExpenses = $_POST['categoryToCarryOverExpenses'];
 
-        SettingsDataManager::moveUserExpensesFromSelectedCategory($expenseCategoryIdToDelete, $categoryToCarryOverExpenses);
-        ////SettingsDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
+        SettingsDataManager::moveUserExpensesFromCategory($expenseCategoryIdToDelete, $categoryToCarryOverExpenses);
+        SettingsDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
     }
 
     public function addExpenseCategoryAction()
@@ -66,7 +64,7 @@ class Settings extends Authentication_login
         $newExpenseCategory = filter_input(INPUT_POST, 'newExpenseCategory');
         $newExpenseCategoryId="";
 
-        if (!SettingsDataManager::isCategoryAssignedToUser($newExpenseCategory) && $newExpenseCategory !="") {
+        if (!SettingsDataManager::isExpenseCategoryAssignedToUser($newExpenseCategory) && $newExpenseCategory !="") {
             SettingsDataManager::addNewExpenseCategory($newExpenseCategory);
             $newExpenseCategoryId = SettingsDataManager::getExpenseCategoryId($newExpenseCategory);
         }
@@ -83,7 +81,7 @@ class Settings extends Authentication_login
 
     public function updateUserDataAction()
     {
-         //SettingsDataManager::updateUserData($_POST);
+         SettingsDataManager::updateUserData($_POST);
         $categoryIdAfterUpdate = SettingsDataManager::updateUserData($_POST);
         echo json_encode($categoryIdAfterUpdate);
     }
@@ -109,27 +107,67 @@ class Settings extends Authentication_login
     }
     */
 
+    public function addIncomeCategoryAction()
+    {
+        $newIncomeCategory = filter_input(INPUT_POST, 'newIncomeCategory');
+        $newIncomeCategoryId="";
 
-
-
-
-
-
-
-
-
-
-
-    /*
-        public function createAction()
-        {
-            if ($this->incomeDataManager->addIncome()) {
-                Flash::addMessage('Dodano nowy przychód');
-                $this->redirect('/income');
-                exit;
-            } else {
-                View::renderTemplate('Income/open.html', ['data' => $this->incomeDataManager]);
-            }
+        if (!SettingsDataManager::isIncomeCategoryAssignedToUser($newIncomeCategory) && $newIncomeCategory !="") {
+            SettingsDataManager::addNewIncomeCategory($newIncomeCategory);
+            $newIncomeCategoryId = SettingsDataManager::getIncomeCategoryId($newIncomeCategory);
         }
-        */
+        echo json_encode($newIncomeCategoryId);
+    }
+
+    public function tryDeleteUserIncomeCategoryAction()
+    {
+        $incomeCategoryIdToDelete = $_POST['incomeCategoryId'];
+        $whetherIncomeCategoryIsUsedByUser = SettingsDataManager::whetherIncomeCategoryIsUsedByUser($incomeCategoryIdToDelete);
+
+        if (!$whetherIncomeCategoryIsUsedByUser) {
+            SettingsDataManager::deleteUserIncomeCategory($incomeCategoryIdToDelete);
+        }
+
+        echo json_encode($whetherIncomeCategoryIsUsedByUser);
+    }
+
+    public function deleteUserIncomeCategoryWithIncomesAction()
+    {
+        $incomeCategoryIdToDelete = $_POST['incomeCategoryId'];
+
+        SettingsDataManager::deleteUserIncomesInSelectedCategory($incomeCategoryIdToDelete);
+        SettingsDataManager::deleteUserIncomeCategory($incomeCategoryIdToDelete);
+    }
+
+    public function deleteUserIncomeCategoryWithMoveIncomesToAnotherCategoryAction()
+    {
+        $incomeCategoryIdToDelete = $_POST['incomeCategoryId'];
+        $categoryToCarryOverIncomes = $_POST['categoryToCarryOverIncomes'];
+
+        SettingsDataManager::moveUserIncomesFromCategory($incomeCategoryIdToDelete, $categoryToCarryOverIncomes);
+        SettingsDataManager::deleteUserIncomeCategory($incomeCategoryIdToDelete);
+    }
+
+
+    public function getUserIncomeCategoriesAction()
+    {
+        $userIncomeCategories = SettingsDataManager::getUserIncomeCategories();
+
+        echo json_encode($userIncomeCategories);
+    }
+
+    public function getUserExpenseCategoriesAction()
+    {
+        $userExpenseCategories = SettingsDataManager::getUserExpenseCategories();
+
+        echo json_encode($userExpenseCategories);
+    }
+
+    public function updateIncomeCategory()
+    {
+        SettingsDataManager::updateUserIncomeCategory($_POST);
+    }
+
+
+
 }

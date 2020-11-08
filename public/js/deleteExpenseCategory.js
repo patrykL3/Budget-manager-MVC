@@ -79,19 +79,36 @@ $(document).ready(function() {
 
     function openDeleteUsedExpenseCategoryModal(expenseCategoryId) {
         let valueChosenExpenseCategoryToDelete = getValueExpenseCategory(expenseCategoryId);
+        
+        $('#expenseCategorySelector').empty();
+        getExpenseCategoriesWithoutRemoveCategoryToModal(valueChosenExpenseCategoryToDelete);
+
         $("#expenseCategoryNameToDelete").html(valueChosenExpenseCategoryToDelete);
         $('.expenseCategoryOption').removeAttr('selected');
-        $('.expenseCategoryOption').each(function() {
-            if ($(this).val() == valueChosenExpenseCategoryToDelete) {
-                $(this).hide();
-            } else {
-                $(this).show();
-                $(this).attr('selected', 'selected');
-            }
-        });
         $("#deleteExpenses").prop("checked", true);
         $("#expenseCategorySelector").attr('disabled', 'disabled');
         $("#delete-used-expense-category").modal('show');
+    }
+
+    function getExpenseCategoriesWithoutRemoveCategoryToModal(valueChosenExpenseCategoryToDelete) {
+
+        $.ajax({
+            url: "/Settings/getUserExpenseCategories",
+            success: function(data) {
+                userExpenseCategories = jQuery.parseJSON(data);
+                $.each(userExpenseCategories, function(i, expenseCategory) {
+                    if (valueChosenExpenseCategoryToDelete != expenseCategory.category_type)
+                        putExpenseCategoryToSelector(expenseCategory.category_type);
+                });
+            }
+        });
+    }
+
+    function putExpenseCategoryToSelector(expenseCategory) {
+        $('#expenseCategorySelector').append($('<option>', {
+            value: expenseCategory,
+            text: expenseCategory
+        }));
     }
 
 

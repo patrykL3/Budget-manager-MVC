@@ -57,9 +57,19 @@ class SettingsDataManager extends \Core\Model
         return ExpenseDataManager::updateUserExpenseCategory($data);
     }
 
+    public static function updateUserIncomeCategory($data = [])
+    {
+        return IncomeDataManager::updateUserIncomeCategory($data);
+    }
+
     public static function deleteUserExpenseCategory($expenseCategoryIdToDelete)
     {
         ExpenseDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
+    }
+
+    public static function deleteUserIncomeCategory($incomeCategoryIdToDelete)
+    {
+        IncomeDataManager::deleteUserIncomeCategory($incomeCategoryIdToDelete);
     }
 
     public static function whetherExpenseCategoryIsUsedByUser($expenseCategoryId)
@@ -75,14 +85,37 @@ class SettingsDataManager extends \Core\Model
         return false;
     }
 
+    public static function whetherIncomeCategoryIsUsedByUser($incomeCategoryId)
+    {
+        $usedUserIncomeCategories = IncomeDataManager::getIdUsedUserIncomeCategories();
+
+        foreach ($usedUserIncomeCategories as $onceOfUserCategories) {
+            if ($onceOfUserCategories['income_category_id'] === $incomeCategoryId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function deleteUserExpensesInSelectedCategory($expenseCategoryId)
     {
         ExpenseDataManager::deleteUserExpensesInSelectedCategory($expenseCategoryId);
     }
 
-    public static function moveUserExpensesFromSelectedCategory($expenseSelectedCategoryId, $categoryToCarryOverExpenses)
+    public static function deleteUserIncomesInSelectedCategory($incomeCategoryId)
     {
-        ExpenseDataManager::moveUserExpensesFromSelectedCategory($expenseSelectedCategoryId, $categoryToCarryOverExpenses);
+        IncomeDataManager::deleteUserIncomesInSelectedCategory($incomeCategoryId);
+    }
+
+    public static function moveUserExpensesFromCategory($oldCategoryId, $categoryToCarryOverExpenses)
+    {
+        ExpenseDataManager::moveUserExpensesFromCategory($oldCategoryId, $categoryToCarryOverExpenses);
+    }
+
+    public static function moveUserIncomesFromCategory($oldCategoryId, $categoryToCarryOverIncomes)
+    {
+        IncomeDataManager::moveUserIncomesFromCategory($oldCategoryId, $categoryToCarryOverIncomes);
     }
 
 
@@ -108,14 +141,29 @@ class SettingsDataManager extends \Core\Model
         ExpenseDataManager::addExpenseCategory($newExpenseCategory, 0, 0);
     }
 
-    public static function isCategoryAssignedToUser($expenseCategory)
+    public static function addNewIncomeCategory($newIncomeCategory)
+    {
+        IncomeDataManager::addIncomeCategory($newIncomeCategory);
+    }
+
+    public static function isExpenseCategoryAssignedToUser($expenseCategory)
     {
         return ExpenseDataManager::isCategoryAssignedToUser($expenseCategory);
+    }
+
+    public static function isIncomeCategoryAssignedToUser($incomeCategory)
+    {
+        return IncomeDataManager::isCategoryAssignedToUser($incomeCategory);
     }
 
     public static function getExpenseCategoryId($expenseCategory)
     {
         return ExpenseDataManager::getExpenseCategoryId($expenseCategory);
+    }
+
+    public static function getIncomeCategoryId($incomeCategory)
+    {
+        return IncomeDataManager::getIncomeCategoryId($incomeCategory);
     }
 /*
     public static function validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType)
@@ -123,4 +171,18 @@ class SettingsDataManager extends \Core\Model
         return ExpenseDataManager::validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType);
     }
     */
+
+    public static function getUserIncomeCategories()
+    {
+        $LoggedUserId = Authentication::getLoggedUser()->user_id;
+        return IncomeDataManager::getUserIncomeCategories($LoggedUserId);
+    }
+
+    public static function getUserExpenseCategories()
+    {
+        $LoggedUserId = Authentication::getLoggedUser()->user_id;
+        return ExpenseDataManager::getUserExpenseCategories($LoggedUserId);
+    }
+
+
 }

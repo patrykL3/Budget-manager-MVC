@@ -347,9 +347,9 @@ class ExpenseDataManager extends \Core\Model
 
 
 
-    public static function moveUserExpensesFromSelectedCategory($expenseSelectedCategoryId, $categoryToCarryOverExpenses)
+    public static function moveUserExpensesFromCategory($oldCategoryId, $categoryToCarryOverExpenses)
     {
-        $expenseSelectedCategoryId = filter_var($expenseSelectedCategoryId, FILTER_VALIDATE_INT);
+        $oldCategoryId = filter_var($oldCategoryId, FILTER_VALIDATE_INT);
         $categoryIdToCarryOverExpenses = ExpenseDataManager::getSelectedCategoryId($categoryToCarryOverExpenses);
         $loggedUser = Authentication::getLoggedUser();
         $database = static::getDB();
@@ -363,7 +363,7 @@ class ExpenseDataManager extends \Core\Model
             '
         );
         $updateCategoriesExpenses->bindValue(':new_expense_category_id', $categoryIdToCarryOverExpenses, PDO::PARAM_INT);
-        $updateCategoriesExpenses->bindValue(':previous_expense_category_id', $expenseSelectedCategoryId, PDO::PARAM_INT);
+        $updateCategoriesExpenses->bindValue(':previous_expense_category_id', $oldCategoryId, PDO::PARAM_INT);
         $updateCategoriesExpenses->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
         $updateCategoriesExpenses->execute();
     }
@@ -398,10 +398,12 @@ class ExpenseDataManager extends \Core\Model
             ($data['newKillerFeature'] === "true") ? $data['newKillerFeature'] = 1 : $data['newKillerFeature'] = 0;
             ExpenseDataManager::deleteUserExpenseCategory($data['expenseCategoryId']);
             ExpenseDataManager::addExpenseCategory($data['newCategoryType'], $data['newKillerFeature'], $data['newKillerFeatureValue']);
+            ExpenseDataManager::moveUserExpensesFromCategory($data['expenseCategoryId'], $data['newCategoryType']);
 
             echo ExpenseDataManager::getExpenseCategoryId($data['newCategoryType']);
         }
     }
+
 
     private static function validateExpenseCategoryData($data = [])
     {
@@ -436,22 +438,22 @@ class ExpenseDataManager extends \Core\Model
 
         return true;
     }
-/*
-    public static function validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType)
-    {
-        $loggedUser = Authentication::getLoggedUser();
-        $userCurrentExpenseCategories = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
+    /*
+        public static function validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType)
+        {
+            $loggedUser = Authentication::getLoggedUser();
+            $userCurrentExpenseCategories = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
 
 
-        foreach ($userCurrentExpenseCategories as $onceOfCurrentCategories) {
-            if ($onceOfCurrentCategories['category_type'] === $expenseCategoryType && $onceOfCurrentCategories['expense_category_id'] != $expenseCategoryId) {
-                return false;
+            foreach ($userCurrentExpenseCategories as $onceOfCurrentCategories) {
+                if ($onceOfCurrentCategories['category_type'] === $expenseCategoryType && $onceOfCurrentCategories['expense_category_id'] != $expenseCategoryId) {
+                    return false;
+                }
             }
-        }
-        return true;
+            return true;
 
-    }
-*/
+        }
+    */
     public static function deleteUserExpenseCategory($expenseCategoryIdToDelete)
     {
         $expenseCategoryIdToDelete = filter_var($expenseCategoryIdToDelete, FILTER_VALIDATE_INT);
@@ -500,10 +502,10 @@ class ExpenseDataManager extends \Core\Model
     {
         $database = static::getDB();
 
-        $assignIncomeToUserQuery = $database->prepare('INSERT INTO expenses_categories (category_type, default_type) VALUES (:category_type, :default_type)');
-        $assignIncomeToUserQuery->bindValue(':category_type', $newExpenseCategory, PDO::PARAM_STR);
-        $assignIncomeToUserQuery->bindValue(':default_type', 0, PDO::PARAM_INT);
-        $assignIncomeToUserQuery->execute();
+        $assignExpenseToUserQuery = $database->prepare('INSERT INTO expenses_categories (category_type, default_type) VALUES (:category_type, :default_type)');
+        $assignExpenseToUserQuery->bindValue(':category_type', $newExpenseCategory, PDO::PARAM_STR);
+        $assignExpenseToUserQuery->bindValue(':default_type', 0, PDO::PARAM_INT);
+        $assignExpenseToUserQuery->execute();
     }
 
     public static function assignExpenseCategoryToUser($newExpenseCategory, $killerFeature, $killerFeatureValue)
