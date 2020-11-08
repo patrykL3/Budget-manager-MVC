@@ -1,0 +1,893 @@
+{% extends 'base-nav.html' %}
+
+{% block title %}BudgetManager{% endblock %}
+{% block description %}Menadżer finansów dzięki któremu zapanujesz nad własnymi środkami pieniężnymi.{% endblock %}
+{% block keywords %}menadżer finansów, zarządzanie finansami, menu{% endblock %}
+
+
+{% block list_class_settings %}active{% endblock %}
+{% block link_class_settings %}stylish{% endblock %}
+
+{% block body %}
+<main>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="width-2 mt-2 mb-4">
+
+                <button id="user-data" class="btn btn-primary btn-lg btn-block mt-3 mb-2" data-target="#edit-user-data-modal" data-toggle="modal">
+                    Dane użytkownika
+                    <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                    </svg>
+                </button>
+
+                <div class="modal fade" id="edit-user-data-modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-center">
+                                <h3 class="h4 font-weight-bold">Edytuj Dane użytkownika</h3>
+                            </div>
+                            <div>
+                                <form id="formUserData" method="post" action="">
+                                    <div class="modal-body">
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <input type="text" id="userName" name="name" class="form-control" placeholder="Imię">
+                                        </div>
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <input type="text" id="userSurname" name="surname" class="form-control" placeholder="Nazwisko">
+                                        </div>
+
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-at" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <input type="text" id="userEmail" name="email" class="form-control" placeholder="E-mail">
+                                        </div>
+
+                                        <div class="row justify-content-around">
+                                            <a class="btn btn-danger btn-lg btn-inline mt-3 cancel">
+                                                Anuluj
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                                    <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                                    <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                                </svg>
+                                            </a>
+
+                                            <button id="updateUserData" href="#" type="submit" class="btn btn-success btn-lg btn-inline mt-3">
+                                                Zapisz
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-file-earmark-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                                    <path fill-rule="evenodd" d="M15.854 10.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708l1.146 1.147 2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                </svg>
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <button id="user-password" type="submit" class="btn btn-primary btn-lg btn-block mt-3 mb-2" data-target="#edit-user-password" data-toggle="modal">
+                    Zmień Hasło
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z" />
+                        <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z" />
+                    </svg>
+                </button>
+
+                <div class="modal fade" id="edit-user-password">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-center">
+                                <h3 class="h4 font-weight-bold">Edytuj hasło</h3>
+                            </div>
+                            <div>
+                                <form id="formUserPassword" method="post" action="">
+                                    <div class="modal-body">
+
+                                        <div class="input-group mb-4 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z" />
+                                                        <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <input type="password" id="oldPassword" class="form-control" name="oldPassword" placeholder="Stare hasło" autocomplete="off">
+                                        </div>
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z" />
+                                                        <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <input id="newPassword" type="password" class="form-control" name="newPassword" placeholder="Nowe hasło" autocomplete="off">
+                                        </div>
+
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z" />
+                                                        <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <input type="password" id="newPasswordConfirmation" class="form-control" name="newPasswordConfirmation" placeholder="Powtórz nowe hasło" autocomplete="off">
+                                        </div>
+                                        <div id="incorrectPasswordData" class="text-primary mb-2 w-100 text-5 row justify-content-center" hidden>Niepoprawne dane!</div>
+
+                                        <div class="row justify-content-around">
+                                            <a class="btn btn-danger btn-lg btn-inline mt-3 cancel">
+                                                Anuluj
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                                    <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                                    <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                                </svg>
+                                            </a>
+
+                                            <button href="#" type="submit" class="btn btn-success btn-lg btn-inline mt-3">
+                                                Zapisz
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-file-earmark-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                                    <path fill-rule="evenodd" d="M15.854 10.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708l1.146 1.147 2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <button id="edit-categories-of-expenses" type="submit" class="show btn btn-primary btn-lg btn-block mt-3 mb-2">
+                    Kategorie wydatków
+                    <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-cart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                    </svg>
+                </button>
+                <div id="categories-of-expenses" class="standardHidden" hidden>
+                    <div class="row onceOfExpenseCategoryRow divToClone" hidden>
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-cart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="col-2 pb-1 pt-1 pr-1 pl-0">
+                            <span>
+                                <a class='editExpenseCategory' href="" data-target="#edit-expence-category-modal" data-toggle="modal" role="button">
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='bi bi-pen text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z' />
+                                        <path fill-rule='evenodd' d='M9.854 2.56a.5.5 0 0 0-.708 0L5.854 5.855a.5.5 0 0 1-.708-.708L8.44 1.854a1.5 1.5 0 0 1 2.122 0l.293.292a.5.5 0 0 1-.707.708l-.293-.293z' />
+                                        <path d='M13.293 1.207a1 1 0 0 1 1.414 0l.03.03a1 1 0 0 1 .03 1.383L13.5 4 12 2.5l1.293-1.293z' />
+                                    </svg>
+                                </a>
+                                <a class='deleteUserExpenseCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='ml-2 bi bi-trash-fill text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z' />
+                                    </svg>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    {% for key in data.userExpenseCategories|keys %}
+                    <div class="row onceOfExpenseCategoryRow">
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-cart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input id="valueExpenseCategoryId{{ data.userExpenseCategories[key].expense_category_id }}" type="text" class="form-control" value="{{ data.userExpenseCategories[key].category_type }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-2 pb-1 pt-1 pr-1 pl-0">
+                            <span>
+                                <a id="editExpenseCategoryId{{ data.userExpenseCategories[key].expense_category_id }}" class='editExpenseCategory' href="" data-target="#edit-expence-category-modal" data-toggle="modal" role="button">
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='bi bi-pen text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z' />
+                                        <path fill-rule='evenodd' d='M9.854 2.56a.5.5 0 0 0-.708 0L5.854 5.855a.5.5 0 0 1-.708-.708L8.44 1.854a1.5 1.5 0 0 1 2.122 0l.293.292a.5.5 0 0 1-.707.708l-.293-.293z' />
+                                        <path d='M13.293 1.207a1 1 0 0 1 1.414 0l.03.03a1 1 0 0 1 .03 1.383L13.5 4 12 2.5l1.293-1.293z' />
+                                    </svg>
+                                </a>
+                                <a id="deleteExpenseCategoryId{{ data.userExpenseCategories[key].expense_category_id }}" class='deleteUserExpenseCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='ml-2 bi bi-trash-fill text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z' />
+                                    </svg>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-cart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input id="newExpenseCategory" type="text" class="form-control" placeholder="Dodaj kategorię">
+                            </div>
+                        </div>
+                        <div class="col-1 p-1 pl-2">
+                            <a id="addNewExpenseCategory" class="add">
+                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-plus-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4a.5.5 0 0 0-1 0v3.5H4a.5.5 0 0 0 0 1h3.5V12a.5.5 0 0 0 1 0V8.5H12a.5.5 0 0 0 0-1H8.5V4z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="edit-expence-category-modal">
+                    <div class="modal-dialog width-3">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-center">
+                                <h3 class="h4 font-weight-bold">Edycja kategorii wydatków</h3>
+                            </div>
+                            <div>
+                                <form id="formExpenseCategory" method="post" action="">
+                                    <div class="modal-body">
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-cart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <input id="expenseCategoryType" name="expenseCategoryType" type="text" class="form-control" placeholder="Kategoria wydatku" value="">
+                                        </div>
+                                        <div class="form-check pl-4 mb-2 mt-3">
+                                            <input class="form-check-input" type="checkbox" name="killer" id="killerCheckbox">
+                                            <label class="form-check-label" for="killerCheckbox">
+                                                Włącz miesięczny limit dla kategorii
+                                            </label>
+                                        </div>
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg id="iconNoProtected" width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-shield-slash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path
+                                                            d="M1.357 3.478c-.42 3.969.87 6.928 2.423 8.911a11.192 11.192 0 0 0 2.417 2.3c.371.256.715.451 1.007.586.27.124.558.225.796.225s.527-.101.796-.225c.292-.135.636-.33 1.007-.586.466-.32.983-.74 1.502-1.263L1.357 3.478zm11.787 7.545c1.145-1.984 1.902-4.644 1.444-8a1.454 1.454 0 0 0-1.003-1.183 61.09 61.09 0 0 0-2.772-.815C9.77.749 8.663.5 8 .5c-.662 0-1.77.249-2.813.525-.548.145-1.1.303-1.59.45l9.547 9.548z" />
+                                                        <path fill-rule="evenodd" d="M14.646 15.354l-14-14 .708-.708 14 14-.707.707z" />
+                                                    </svg>
+                                                    <svg id="iconProtected" hidden width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-shield-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd"
+                                                            d="M5.187 1.025C6.23.749 7.337.5 8 .5c.662 0 1.77.249 2.813.525a61.09 61.09 0 0 1 2.772.815c.528.168.926.623 1.003 1.184.573 4.197-.756 7.307-2.367 9.365a11.191 11.191 0 0 1-2.418 2.3 6.942 6.942 0 0 1-1.007.586c-.27.124-.558.225-.796.225s-.526-.101-.796-.225a6.908 6.908 0 0 1-1.007-.586 11.192 11.192 0 0 1-2.417-2.3C2.167 10.331.839 7.221 1.412 3.024A1.454 1.454 0 0 1 2.415 1.84a61.11 61.11 0 0 1 2.772-.815z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <input id="categoryLimit" type="text" class="form-control amount" name="amount" placeholder="Limit kategorii" value="" disabled>
+                                        </div>
+
+                                        <div class="row justify-content-around">
+                                            <a class="btn btn-danger btn-lg btn-inline mt-3 cancel">
+                                                Anuluj
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                                    <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                                    <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                                </svg>
+                                            </a>
+
+                                            <button id="updateExpense" href="#" type="submit" class="btn btn-success btn-lg btn-inline mt-3">
+                                                Zapisz
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-file-earmark-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                                    <path fill-rule="evenodd" d="M15.854 10.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708l1.146 1.147 2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="delete-used-expense-category">
+                    <div class="modal-dialog width-3 pl-2 pr-2">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-center">
+                                <h3 class="h4 font-weight-bold">Usuwanie kategorii wydatków</h3>
+                            </div>
+                            <div>
+
+                                <form id="formDeleteUsedExpenseCategory" method="post" action="">
+                                    <div class="modal-body">
+                                        <div class="row justify-content-center">
+                                            <h3 class="h5 font-weight-bold" id="expenseCategoryNameToDelete"></h3>
+                                        </div>
+                                        <div class="justify-content-center text-center mb-3">
+                                            <span>Istnieją przychody przypisane do usuwanej kategorii.<br>
+                                                Co chcesz z nimi zrobić?</span>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="chosen" id="deleteExpenses" value="delete" checked>
+                                            <label class="form-check-label" for="deleteExpenses">
+                                                Usuń te wydatki
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" name="chosen" id="transferExpenses" value="transfer">
+                                            <label class="form-check-label" for="transferExpenses">
+                                                Przenieś wydatki do innej kategorii:
+                                            </label>
+                                        </div>
+
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-box-arrow-in-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 0 1 0-.708L10.793 8 8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z" />
+                                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 1 8z" />
+                                                        <path fill-rule="evenodd"
+                                                            d="M13.5 14.5A1.5 1.5 0 0 0 15 13V3a1.5 1.5 0 0 0-1.5-1.5h-8A1.5 1.5 0 0 0 4 3v1.5a.5.5 0 0 0 1 0V3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5h-8A.5.5 0 0 1 5 13v-1.5a.5.5 0 0 0-1 0V13a1.5 1.5 0 0 0 1.5 1.5h8z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <select class="form-control" name="category" id="expenseCategorySelector" disabled>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="row justify-content-around">
+                                            <a class="btn btn-danger btn-lg btn-inline mt-3 cancel">
+                                                Anuluj
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                                    <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                                    <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                                </svg>
+                                            </a>
+
+                                            <button href="#" type="submit" class="btn btn-success btn-lg btn-inline mt-3">
+                                                Zapisz
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-file-earmark-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                                    <path fill-rule="evenodd" d="M15.854 10.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708l1.146 1.147 2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="category-exist-info">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <button type="button" class="close cancel" aria-label="Close">
+                                    <span aria-hidden="true">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                        </svg>
+                                    </span>
+                                </button>
+                                <div>Kategoria już istnieje</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="no-category-type-info">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <button type="button" class="close cancel" aria-label="Close">
+                                    <span aria-hidden="true">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                        </svg>
+                                    </span>
+                                </button>
+                                <div>Nie wprowadzono kategorii</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="edit-categories-of-incomes" type="submit" class="show btn btn-primary btn-lg btn-block mt-3 mb-2">
+                    <span>Kategorie przychodów</span>
+                    <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-credit-card-2-back-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2z" />
+                        <path d="M0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z" />
+                    </svg>
+                </button>
+                <div id="categories-of-incomes" class="standardHidden" hidden>
+                    <div class="row onceOfIncomeCategoryRow divToClone" hidden>
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-credit-card-2-back-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2z" />
+                                            <path d="M0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control standardDisabled valueIncomeCategory" disabled>
+                            </div>
+                        </div>
+                        <div class="col-2 p-1">
+                            <span class="basicIcons">
+                                <a class='editWithoutModal editIncomeCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='bi bi-pen text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z' />
+                                        <path fill-rule='evenodd' d='M9.854 2.56a.5.5 0 0 0-.708 0L5.854 5.855a.5.5 0 0 1-.708-.708L8.44 1.854a1.5 1.5 0 0 1 2.122 0l.293.292a.5.5 0 0 1-.707.708l-.293-.293z' />
+                                        <path d='M13.293 1.207a1 1 0 0 1 1.414 0l.03.03a1 1 0 0 1 .03 1.383L13.5 4 12 2.5l1.293-1.293z' />
+                                    </svg>
+                                </a>
+                                <a class='deleteUserIncomeCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='ml-2 bi bi-trash-fill text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z' />
+                                    </svg>
+                                </a>
+                            </span>
+                            <span class="editingCategoryIcons" hidden>
+                                <a class='saveIncomeCategory'>
+                                    <svg width="1.15em" height="1.15em" viewBox="0 0 16 16" class="bi bi-check-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z" />
+                                    </svg>
+                                </a>
+                                <a class="cancel">
+                                    <svg width="1.15em" height="1.15em" viewBox="0 0 16 16" class="ml-2 bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                    </svg>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    {% for key in data.userIncomeCategories|keys %}
+                    <div class="row onceOfIncomeCategoryRow">
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-credit-card-2-back-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2z" />
+                                            <path d="M0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input id="valueIncomeCategoryId{{ data.userIncomeCategories[key].income_category_id }}" type="text" class="form-control standardDisabled valueIncomeCategory" value="{{ data.userIncomeCategories[key].category_type }}"
+                                    disabled>
+                            </div>
+                        </div>
+                        <div class="col-2 p-1">
+                            <span class="basicIcons">
+                                <a id="editIncomeCategoryId{{ data.userIncomeCategories[key].income_category_id }}" class='editWithoutModal editIncomeCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='bi bi-pen text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z' />
+                                        <path fill-rule='evenodd' d='M9.854 2.56a.5.5 0 0 0-.708 0L5.854 5.855a.5.5 0 0 1-.708-.708L8.44 1.854a1.5 1.5 0 0 1 2.122 0l.293.292a.5.5 0 0 1-.707.708l-.293-.293z' />
+                                        <path d='M13.293 1.207a1 1 0 0 1 1.414 0l.03.03a1 1 0 0 1 .03 1.383L13.5 4 12 2.5l1.293-1.293z' />
+                                    </svg>
+                                </a>
+                                <a id="deleteIncomeCategoryId{{ data.userIncomeCategories[key].income_category_id }}" class='deleteUserIncomeCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='ml-2 bi bi-trash-fill text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z' />
+                                    </svg>
+                                </a>
+                            </span>
+                            <span id="editingIncomeCategoryIconsId{{ data.userIncomeCategories[key].income_category_id }}" class="editingCategoryIcons" hidden>
+                                <a id="saveIncomeCategoryId{{ data.userIncomeCategories[key].income_category_id }}" class='saveIncomeCategory'>
+                                    <svg width="1.15em" height="1.15em" viewBox="0 0 16 16" class="bi bi-check-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z" />
+                                    </svg>
+                                </a>
+                                <a class="cancel">
+                                    <svg width="1.15em" height="1.15em" viewBox="0 0 16 16" class="ml-2 bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                    </svg>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-credit-card-2-back-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2z" />
+                                            <path d="M0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input id="newIncomeCategory" type="text" class="form-control" placeholder="Dodaj kategorię">
+                            </div>
+                        </div>
+                        <div class="col-1 p-1 pl-2">
+                            <a id="addNewIncomeCategory" class="add">
+                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-plus-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4a.5.5 0 0 0-1 0v3.5H4a.5.5 0 0 0 0 1h3.5V12a.5.5 0 0 0 1 0V8.5H12a.5.5 0 0 0 0-1H8.5V4z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="modal fade" id="delete-used-income-category">
+                    <div class="modal-dialog width-3 pl-2 pr-2">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-center">
+                                <h3 class="h4 font-weight-bold">Usuwanie kategorii przychodów</h3>
+                            </div>
+                            <div>
+
+                                <form id="formDeleteUsedIncomeCategory" method="post" action="">
+                                    <div class="modal-body">
+                                        <div class="row justify-content-center">
+                                            <h3 class="h5 font-weight-bold" id="incomeCategoryNameToDelete"></h3>
+                                        </div>
+                                        <div class="justify-content-center text-center mb-3">
+                                            <span>Istnieją przychody przypisane do usuwanej kategorii.<br>
+                                                Co chcesz z nimi zrobić?</span>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="chosen" id="deleteIncomes" value="delete" checked>
+                                            <label class="form-check-label" for="deleteIncomes">
+                                                Usuń te przychody
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="radio" name="chosen" id="transferIncomes" value="transfer">
+                                            <label class="form-check-label" for="transferIncomes">
+                                                Przenieś przychody do innej kategorii:
+                                            </label>
+                                        </div>
+
+                                        <div class="input-group mb-2 mr-sm-2">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-box-arrow-in-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 0 1 0-.708L10.793 8 8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z" />
+                                                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 1 8z" />
+                                                        <path fill-rule="evenodd"
+                                                            d="M13.5 14.5A1.5 1.5 0 0 0 15 13V3a1.5 1.5 0 0 0-1.5-1.5h-8A1.5 1.5 0 0 0 4 3v1.5a.5.5 0 0 0 1 0V3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5h-8A.5.5 0 0 1 5 13v-1.5a.5.5 0 0 0-1 0V13a1.5 1.5 0 0 0 1.5 1.5h8z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <select class="form-control" name="category" id="incomeCategorySelector" disabled>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="row justify-content-around">
+                                            <a class="btn btn-danger btn-lg btn-inline mt-3 cancel">
+                                                Anuluj
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                                    <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                                    <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                                </svg>
+                                            </a>
+
+                                            <button href="#" type="submit" class="btn btn-success btn-lg btn-inline mt-3">
+                                                Zapisz
+                                                <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-file-earmark-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                                    <path fill-rule="evenodd" d="M15.854 10.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708l1.146 1.147 2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <button id="edit-categories-of-payment" type="submit" class="show btn btn-primary btn-lg btn-block mt-3 mb-2">
+                    <span>Metody płatności</span>
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-wallet-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v2h6a.5.5 0 0 1 .5.5c0 .253.08.644.306.958.207.288.557.542 1.194.542.637 0 .987-.254 1.194-.542.226-.314.306-.705.306-.958a.5.5 0 0 1 .5-.5h6v-2A1.5 1.5 0 0 0 14.5 2h-13z" />
+                        <path d="M16 6.5h-5.551a2.678 2.678 0 0 1-.443 1.042C9.613 8.088 8.963 8.5 8 8.5c-.963 0-1.613-.412-2.006-.958A2.679 2.679 0 0 1 5.551 6.5H0v6A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-6z" />
+                    </svg>
+                </button>
+
+                <div id="categories-of-payment" class="standardHidden" hidden>
+                    <div class="row onceOfPaymentCategoryRow divToClone" hidden>
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-credit-card-2-back-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2z" />
+                                            <path d="M0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control standardDisabled valuePaymentCategory" disabled>
+                            </div>
+                        </div>
+                        <div class="col-2 p-1">
+                            <span class="basicIcons">
+                                <a class='editWithoutModal editPaymentCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='bi bi-pen text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z' />
+                                        <path fill-rule='evenodd' d='M9.854 2.56a.5.5 0 0 0-.708 0L5.854 5.855a.5.5 0 0 1-.708-.708L8.44 1.854a1.5 1.5 0 0 1 2.122 0l.293.292a.5.5 0 0 1-.707.708l-.293-.293z' />
+                                        <path d='M13.293 1.207a1 1 0 0 1 1.414 0l.03.03a1 1 0 0 1 .03 1.383L13.5 4 12 2.5l1.293-1.293z' />
+                                    </svg>
+                                </a>
+                                <a class='deleteUserPaymentCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='ml-2 bi bi-trash-fill text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z' />
+                                    </svg>
+                                </a>
+                            </span>
+                            <span class="editingCategoryIcons" hidden>
+                                <a class='savePaymentCategory'>
+                                    <svg width="1.15em" height="1.15em" viewBox="0 0 16 16" class="bi bi-check-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z" />
+                                    </svg>
+                                </a>
+                                <a class="cancel">
+                                    <svg width="1.15em" height="1.15em" viewBox="0 0 16 16" class="ml-2 bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                    </svg>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+
+                    {% for key in data.userPaymentCategories|keys %}
+                    <div class="row onceOfPaymentCategoryRow">
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-credit-card-2-back-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2z" />
+                                            <path d="M0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input id="valuePaymentCategoryId{{ data.userPaymentCategories[key].payment_category_id }}" type="text" class="form-control standardDisabled valuePaymentCategory"
+                                    value="{{ data.userPaymentCategories[key].payment_category_type }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-2 p-1">
+                            <span class="basicIcons">
+                                <a id="editPaymentCategoryId{{ data.userPaymentCategories[key].payment_category_id }}" class='editWithoutModal editPaymentCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='bi bi-pen text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z' />
+                                        <path fill-rule='evenodd' d='M9.854 2.56a.5.5 0 0 0-.708 0L5.854 5.855a.5.5 0 0 1-.708-.708L8.44 1.854a1.5 1.5 0 0 1 2.122 0l.293.292a.5.5 0 0 1-.707.708l-.293-.293z' />
+                                        <path d='M13.293 1.207a1 1 0 0 1 1.414 0l.03.03a1 1 0 0 1 .03 1.383L13.5 4 12 2.5l1.293-1.293z' />
+                                    </svg>
+                                </a>
+                                <a id="deletePaymentCategoryId{{ data.userPaymentCategories[key].payment_category_id }}" class='deleteUserPaymentCategory'>
+                                    <svg width='1.15em' height='1.15em' viewBox='0 0 16 16' class='ml-2 bi bi-trash-fill text-primary hoverDarker' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
+                                        <path fill-rule='evenodd'
+                                            d='M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z' />
+                                    </svg>
+                                </a>
+                            </span>
+                            <span id="editingPaymentCategoryIconsId{{ data.userPaymentCategories[key].payment_category_id }}" class="editingCategoryIcons" hidden>
+                                <a id="savePaymentCategoryId{{ data.userPaymentCategories[key].payment_category_id }}" class='savePaymentCategory'>
+                                    <svg width="1.15em" height="1.15em" viewBox="0 0 16 16" class="bi bi-check-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z" />
+                                    </svg>
+                                </a>
+                                <a class="cancel">
+                                    <svg width="1.15em" height="1.15em" viewBox="0 0 16 16" class="ml-2 bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                    </svg>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="input-group mb-2 mr-sm-2">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-credit-card-2-back-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5H0V4zm11.5 1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-2z" />
+                                            <path d="M0 11v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1H0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <input id="newPaymentCategory" type="text" class="form-control" placeholder="Dodaj kategorię">
+                            </div>
+                        </div>
+                        <div class="col-1 p-1 pl-2">
+                            <a id="addNewPaymentCategory" class="add">
+                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-plus-square-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4a.5.5 0 0 0-1 0v3.5H4a.5.5 0 0 0 0 1h3.5V12a.5.5 0 0 0 1 0V8.5H12a.5.5 0 0 0 0-1H8.5V4z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="delete-used-payment-category">
+                        <div class="modal-dialog width-3 pl-2 pr-2">
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h3 class="h4 font-weight-bold">Usuwanie metody płatności</h3>
+                                </div>
+                                <div>
+
+                                    <form id="formDeleteUsedPaymentCategory" method="post" action="">
+                                        <div class="modal-body">
+                                            <div class="row justify-content-center">
+                                                <h3 class="h5 font-weight-bold" id="paymentCategoryNameToDelete"></h3>
+                                            </div>
+                                            <div class="justify-content-center text-center mb-3">
+                                                <span>Istnieją wydatki zawierające metodę płatności.<br>
+                                                    Co chcesz z nimi zrobić?</span>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="chosen" id="deleteExpensesWithPayments" value="delete" checked>
+                                                <label class="form-check-label" for="deleteExpensesWithPayments">
+                                                    Usuń te wydatki
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="chosen" id="transferPayments" value="transfer">
+                                                <label class="form-check-label" for="transferPayments">
+                                                    Przenieś ich metody płatności do innej kategorii:
+                                                </label>
+                                            </div>
+
+                                            <div class="input-group mb-2 mr-sm-2">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-box-arrow-in-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                            <path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 0 1 0-.708L10.793 8 8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z" />
+                                                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 1 8z" />
+                                                            <path fill-rule="evenodd"
+                                                                d="M13.5 14.5A1.5 1.5 0 0 0 15 13V3a1.5 1.5 0 0 0-1.5-1.5h-8A1.5 1.5 0 0 0 4 3v1.5a.5.5 0 0 0 1 0V3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5h-8A.5.5 0 0 1 5 13v-1.5a.5.5 0 0 0-1 0V13a1.5 1.5 0 0 0 1.5 1.5h8z" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <select class="form-control" name="category" id="paymentCategorySelector" disabled>
+                                                </select>
+                                            </div>
+
+
+                                            <div class="row justify-content-around">
+                                                <a class="btn btn-danger btn-lg btn-inline mt-3 cancel">
+                                                    Anuluj
+                                                    <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-x-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                                        <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                                        <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                                    </svg>
+                                                </a>
+
+                                                <button href="#" type="submit" class="btn btn-success btn-lg btn-inline mt-3">
+                                                    Zapisz
+                                                    <svg width="1.1em" height="1.1em" viewBox="0 0 16 16" class="bi bi-file-earmark-check" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                                        <path fill-rule="evenodd" d="M15.854 10.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708l1.146 1.147 2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+
+{% block footer %}
+
+<script src="js/validateExpenseCategory.js"></script>
+<script src="/js/hideModal.js"></script>
+<script src="js/hide.js"></script>
+<script src="js/amount.js"></script>
+<script src="js/editExpenseCategory.js"></script>
+<script src="js/addExpenseCategory.js"></script>
+<script src="js/validateEditUserData.js"></script>
+<script src="js/addIncomeCategory.js"></script>
+<script src="js/editIncomeCategory.js"></script>
+<script src="js/editUserData.js"></script>
+<script src="js/validateEditPassword.js"></script>
+<script src="js/editPassword.js"></script>
+<script src="js/deleteExpenseCategory.js"></script>
+<script src="js/deleteIncomeCategory.js"></script>
+<script src="js/addPaymentCategory.js"></script>
+<script src="js/deletePaymentCategory.js"></script>
+<script src="js/editPaymentCategory.js"></script>
+
+{% endblock %}

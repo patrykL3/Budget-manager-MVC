@@ -4,6 +4,7 @@ namespace App\Models;
 
 use PDO;
 use \App\Token;
+use \App\Authentication;
 
 class User extends \Core\Model
 {
@@ -225,6 +226,12 @@ class User extends \Core\Model
         $loginData['email_or_login'] = filter_input(INPUT_POST, 'email_or_login');
         $loginData['password'] = filter_input(INPUT_POST, 'password');
 
+        /*********************************/
+            $loginData['email_or_login'] = 'zxc';
+            $loginData['password'] = 'Zxc123';
+        /*********************************/
+
+
         $user = static::findByEmail($loginData['email_or_login']);
         if (!$user) {
             $user = static::findByLogin($loginData['email_or_login']);
@@ -276,5 +283,97 @@ class User extends \Core\Model
         $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $this->expiry_timestamp), PDO::PARAM_STR);
 
         return $stmt->execute();
+    }
+
+    public static function updateUserData($data = [])
+    {
+        $loggedUser = Authentication::getLoggedUser();
+
+        if (User::validateUserDataToEdit($data)) {
+            $database = static::getDB();
+
+            $editUserData = $database->prepare(
+                'UPDATE users
+                SET name = :name, surname = :surname, email = :email
+                WHERE user_id = :user_id;
+                '
+            );
+            $editUserData->bindValue(':name', $data['name'], PDO::PARAM_STR);
+            $editUserData->bindValue(':surname', $data['surname'], PDO::PARAM_STR);
+            $editUserData->bindValue(':email', $data['email'], PDO::PARAM_STR);
+            $editUserData->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+            $editUserData->execute();
+        }
+    }
+
+    public static function validateUserDataToEdit($data = [])
+    {
+        // Name
+        $data['name'] = filter_input(INPUT_POST, "name");
+        if ($data['name'] == '') {
+            return false;
+        }
+
+        // Surname
+        $data['surname'] = filter_input(INPUT_POST, "surname");
+        if ($data["surname"] == '') {
+            return false;
+        }
+
+        // email address
+        if (filter_var($data["email"], FILTER_VALIDATE_EMAIL) === false) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function isEmailCurrentUser($email)
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        return ($loggedUser->email == $email) ? true : false;
+    }
+
+    public static function updateUserPassword($data = [])
+    {
+        $loggedUser = Authentication::getLoggedUser();
+
+
+        if (User::validateUserPasswordToEdit($data)) {
+            $password_hash = password_hash($data['newPassword'], PASSWORD_DEFAULT);
+            $database = static::getDB();
+
+            $editUserPassword = $database->prepare(
+                'UPDATE users
+                SET password = :password
+                WHERE user_id = :user_id;
+                '
+            );
+            $editUserPassword->bindValue(':password', $password_hash, PDO::PARAM_STR);
+            $editUserPassword->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+            return $editUserPassword->execute();
+        }
+    }
+
+    public static function validateUserPasswordToEdit($data = [])
+    {
+        $data['oldPassword'] = filter_input(INPUT_POST, 'oldPassword');
+        $data['newPassword'] = filter_input(INPUT_POST, 'newPassword');
+        $data['newPasswordConfirmation'] = filter_input(INPUT_POST, 'newPasswordConfirmation');
+        $loggedUser = Authentication::getLoggedUser();
+
+        if (!password_verify($data['oldPassword'], $loggedUser->password)) {
+            return false;
+        }
+
+        if ($data['newPassword'] != $data['newPasswordConfirmation']) {
+            return false;
+            //$this->errors['passwordConfirmation'] = 'Hasła nie są identyczne';
+        }
+        if (strlen($data['newPassword']) < 6 || preg_match('/.*[a-z]+.*/i', $data['newPassword']) == 0 || preg_match('/.*\d+.*/i', $data['newPassword']) == 0) {
+            return false;
+            //$this->errors['password'] = 'Hasło musi zawierać przynajmniej 6 znaków, jedną cyfrę i literę';
+        }
+
+        return true;
     }
 }
