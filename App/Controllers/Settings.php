@@ -6,7 +6,6 @@ use \Core\View;
 
 use \App\Models\SettingsDataManager;
 
-//use \App\Flash;
 
 class Settings extends Authentication_login
 {
@@ -25,10 +24,12 @@ class Settings extends Authentication_login
         echo json_encode($expenseCategoryToEdit);
     }
 
+
     public function updateExpenseCategory()
     {
         SettingsDataManager::updateUserExpenseCategory($_POST);
     }
+
 
     public function tryDeleteUserExpenseCategoryAction()
     {
@@ -42,6 +43,20 @@ class Settings extends Authentication_login
         echo json_encode($whetherExpenseCategoryIsUsedByUser);
     }
 
+
+    public function tryDeleteUserPaymentCategoryAction()
+    {
+        $paymentCategoryIdToDelete = $_POST['paymentCategoryId'];
+        $whetherPaymentCategoryIsUsedByUser = SettingsDataManager::whetherPaymentCategoryIsUsedByUser($paymentCategoryIdToDelete);
+
+        if (!$whetherPaymentCategoryIsUsedByUser) {
+            SettingsDataManager::deleteUserPaymentCategory($paymentCategoryIdToDelete);
+        }
+
+        echo json_encode($whetherPaymentCategoryIsUsedByUser);
+    }
+
+
     public function deleteUserExpenseCategoryWithExpensesAction()
     {
         $expenseCategoryIdToDelete = $_POST['expenseCategoryId'];
@@ -49,6 +64,16 @@ class Settings extends Authentication_login
         SettingsDataManager::deleteUserExpensesInSelectedCategory($expenseCategoryIdToDelete);
         SettingsDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
     }
+
+
+    public function deleteUserPaymentCategoryWithExpenses()
+    {
+        $paymentCategoryIdToDelete = $_POST['paymentCategoryId'];
+
+        SettingsDataManager::deleteUserExpensesWithPaymentCategory($paymentCategoryIdToDelete);
+        SettingsDataManager::deleteUserPaymentCategory($paymentCategoryIdToDelete);
+    }
+
 
     public function deleteUserExpenseCategoryWithMoveExpensesToAnotherCategoryAction()
     {
@@ -58,6 +83,17 @@ class Settings extends Authentication_login
         SettingsDataManager::moveUserExpensesFromCategory($expenseCategoryIdToDelete, $categoryToCarryOverExpenses);
         SettingsDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
     }
+
+
+    public function deleteUserPaymentCategoryWithMovePaymentsToAnotherCategoryAction()
+    {
+        $paymentCategoryIdToDelete = $_POST['paymentCategoryId'];
+        $categoryToCarryOverPayments = $_POST['categoryToCarryOverPayments'];
+
+        SettingsDataManager::movePaymentsToAnotherCategory($paymentCategoryIdToDelete, $categoryToCarryOverPayments);
+        SettingsDataManager::deleteUserPaymentCategory($paymentCategoryIdToDelete);
+    }
+
 
     public function addExpenseCategoryAction()
     {
@@ -72,6 +108,19 @@ class Settings extends Authentication_login
     }
 
 
+    public function addPaymentCategoryAction()
+    {
+        $newPaymentCategory = filter_input(INPUT_POST, 'newPaymentCategory');
+        $newPaymentCategoryId="";
+
+        if (!SettingsDataManager::isPaymentCategoryAssignedToUser($newPaymentCategory) && $newPaymentCategory !="") {
+            SettingsDataManager::addNewPaymentCategory($newPaymentCategory);
+            $newPaymentCategoryId = SettingsDataManager::getPaymentCategoryId($newPaymentCategory);
+        }
+        echo json_encode($newPaymentCategoryId);
+    }
+
+
     public function getDataToEditUserDataAction()
     {
         $userData = SettingsDataManager::getUserData();
@@ -79,33 +128,35 @@ class Settings extends Authentication_login
         echo json_encode($userData);
     }
 
+
     public function updateUserDataAction()
     {
-         SettingsDataManager::updateUserData($_POST);
+        SettingsDataManager::updateUserData($_POST);
         $categoryIdAfterUpdate = SettingsDataManager::updateUserData($_POST);
         echo json_encode($categoryIdAfterUpdate);
     }
 
+
     public function updateUserPasswordAction()
     {
-        $error = false; //????????????
+        $error = false;
 
         if (!SettingsDataManager::updateUserPassword($_POST)) {
             $error = true;
         }
         echo json_encode($error);
     }
-/*
-    public function validateExpenseCategoryChangeType()
-    {
-        $expenseCategoryId = $_GET['expenseCategoryId'];
-        $expenseCategoryType = $_GET['expenseCategoryType'];
+    /*
+        public function validateExpenseCategoryChangeType()
+        {
+            $expenseCategoryId = $_GET['expenseCategoryId'];
+            $expenseCategoryType = $_GET['expenseCategoryType'];
 
-        $isValid =  SettingsDataManager::validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType);
+            $isValid =  SettingsDataManager::validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType);
 
-        echo json_encode($isValid);
-    }
-    */
+            echo json_encode($isValid);
+        }
+        */
 
     public function addIncomeCategoryAction()
     {
@@ -119,6 +170,7 @@ class Settings extends Authentication_login
         echo json_encode($newIncomeCategoryId);
     }
 
+
     public function tryDeleteUserIncomeCategoryAction()
     {
         $incomeCategoryIdToDelete = $_POST['incomeCategoryId'];
@@ -131,6 +183,7 @@ class Settings extends Authentication_login
         echo json_encode($whetherIncomeCategoryIsUsedByUser);
     }
 
+
     public function deleteUserIncomeCategoryWithIncomesAction()
     {
         $incomeCategoryIdToDelete = $_POST['incomeCategoryId'];
@@ -138,6 +191,7 @@ class Settings extends Authentication_login
         SettingsDataManager::deleteUserIncomesInSelectedCategory($incomeCategoryIdToDelete);
         SettingsDataManager::deleteUserIncomeCategory($incomeCategoryIdToDelete);
     }
+
 
     public function deleteUserIncomeCategoryWithMoveIncomesToAnotherCategoryAction()
     {
@@ -156,6 +210,7 @@ class Settings extends Authentication_login
         echo json_encode($userIncomeCategories);
     }
 
+
     public function getUserExpenseCategoriesAction()
     {
         $userExpenseCategories = SettingsDataManager::getUserExpenseCategories();
@@ -163,11 +218,23 @@ class Settings extends Authentication_login
         echo json_encode($userExpenseCategories);
     }
 
-    public function updateIncomeCategory()
+
+    public function getUserPaymentCategoriesAction()
+    {
+        $userPaymentCategories = SettingsDataManager::getUserPaymentCategories();
+
+        echo json_encode($userPaymentCategories);
+    }
+
+
+    public function updateIncomeCategoryAction()
     {
         SettingsDataManager::updateUserIncomeCategory($_POST);
     }
 
 
-
+    public function updatePaymentCategoryAction()
+    {
+        SettingsDataManager::updateUserPaymentCategory($_POST);
+    }
 }

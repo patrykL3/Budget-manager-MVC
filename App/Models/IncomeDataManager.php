@@ -443,7 +443,7 @@ class IncomeDataManager extends \Core\Model
         // Category;
         $data['newCategoryType'] = filter_input(INPUT_POST, 'newCategoryType');
         if (empty($data['newCategoryType'])) {
-                    echo "empty";
+            echo "empty";
             return false;
         }
         foreach ($userCurrentIncomeCategories as $onceOfCurrentCategories) {

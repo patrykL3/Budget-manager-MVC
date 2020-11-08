@@ -1,7 +1,5 @@
 $(document).ready(function() {
 
-
-
     $(".show").click(function() {
         let clickedShapeId = $(this).attr('id');
         idToShow = clickedShapeId.replace('edit-', '');
@@ -16,9 +14,6 @@ $(document).ready(function() {
         (clickedShape.parent()).parent().attr('hidden', 'hidden');
     });
 
-
-
-
     $(document).on('click', '.editWithoutModal', function() {
         $(".basicIcons").removeAttr('hidden');
         $(".editingCategoryIcons").attr('hidden', 'hidden');
@@ -26,19 +21,10 @@ $(document).ready(function() {
         ($(this).parent()).attr('hidden', 'hidden');
     });
 
-
-
-
-$(document).on('focusout', '.standardDisabled', function() {
-    $(".editingCategoryIcons").attr('hidden', 'hidden');
-    $(".standardDisabled").attr('disabled', 'disabled');
-    $(".basicIcons").removeAttr('hidden');
-});
-/*
-    $(document).on('click', '.focusOutCategory', function() {
+    $(document).on('focusout', '.standardDisabled', function() {
         $(".editingCategoryIcons").attr('hidden', 'hidden');
         $(".standardDisabled").attr('disabled', 'disabled');
         $(".basicIcons").removeAttr('hidden');
     });
-*/
+
 });

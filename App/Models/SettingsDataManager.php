@@ -57,6 +57,11 @@ class SettingsDataManager extends \Core\Model
         return ExpenseDataManager::updateUserExpenseCategory($data);
     }
 
+    public static function updateUserPaymentCategory($data = [])
+    {
+        return ExpenseDataManager::updateUserPaymentCategory($data);
+    }
+
     public static function updateUserIncomeCategory($data = [])
     {
         return IncomeDataManager::updateUserIncomeCategory($data);
@@ -65,6 +70,11 @@ class SettingsDataManager extends \Core\Model
     public static function deleteUserExpenseCategory($expenseCategoryIdToDelete)
     {
         ExpenseDataManager::deleteUserExpenseCategory($expenseCategoryIdToDelete);
+    }
+
+    public static function deleteUserPaymentCategory($paymentCategoryIdToDelete)
+    {
+        ExpenseDataManager::deleteUserPaymentCategory($paymentCategoryIdToDelete);
     }
 
     public static function deleteUserIncomeCategory($incomeCategoryIdToDelete)
@@ -78,6 +88,19 @@ class SettingsDataManager extends \Core\Model
 
         foreach ($usedUserExpenseCategories as $onceOfUserCategories) {
             if ($onceOfUserCategories['expense_category_id'] === $expenseCategoryId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function whetherPaymentCategoryIsUsedByUser($paymentCategoryId)
+    {
+        $usedUserPaymentCategories = ExpenseDataManager::getIdUsedUserPaymentsCategories();
+
+        foreach ($usedUserPaymentCategories as $onceOfUserCategories) {
+            if ($onceOfUserCategories['payment_category_id'] === $paymentCategoryId) {
                 return true;
             }
         }
@@ -103,6 +126,11 @@ class SettingsDataManager extends \Core\Model
         ExpenseDataManager::deleteUserExpensesInSelectedCategory($expenseCategoryId);
     }
 
+    public static function deleteUserExpensesWithPaymentCategory($paymentCategoryId)
+    {
+        ExpenseDataManager::deleteUserExpensesWithPaymentCategory($paymentCategoryId);
+    }
+
     public static function deleteUserIncomesInSelectedCategory($incomeCategoryId)
     {
         IncomeDataManager::deleteUserIncomesInSelectedCategory($incomeCategoryId);
@@ -111,6 +139,11 @@ class SettingsDataManager extends \Core\Model
     public static function moveUserExpensesFromCategory($oldCategoryId, $categoryToCarryOverExpenses)
     {
         ExpenseDataManager::moveUserExpensesFromCategory($oldCategoryId, $categoryToCarryOverExpenses);
+    }
+
+    public static function movePaymentsToAnotherCategory($oldPaymentCategoryId, $categoryToCarryOverPayments)
+    {
+        ExpenseDataManager::movePaymentsToAnotherCategory($oldPaymentCategoryId, $categoryToCarryOverPayments);
     }
 
     public static function moveUserIncomesFromCategory($oldCategoryId, $categoryToCarryOverIncomes)
@@ -141,6 +174,11 @@ class SettingsDataManager extends \Core\Model
         ExpenseDataManager::addExpenseCategory($newExpenseCategory, 0, 0);
     }
 
+    public static function addNewPaymentCategory($newPaymentCategory)
+    {
+        ExpenseDataManager::addPaymentCategory($newPaymentCategory);
+    }
+
     public static function addNewIncomeCategory($newIncomeCategory)
     {
         IncomeDataManager::addIncomeCategory($newIncomeCategory);
@@ -151,6 +189,11 @@ class SettingsDataManager extends \Core\Model
         return ExpenseDataManager::isCategoryAssignedToUser($expenseCategory);
     }
 
+    public static function isPaymentCategoryAssignedToUser($paymentCategory)
+    {
+        return ExpenseDataManager::isPaymentCategoryAssignedToUser($paymentCategory);
+    }
+
     public static function isIncomeCategoryAssignedToUser($incomeCategory)
     {
         return IncomeDataManager::isCategoryAssignedToUser($incomeCategory);
@@ -159,6 +202,11 @@ class SettingsDataManager extends \Core\Model
     public static function getExpenseCategoryId($expenseCategory)
     {
         return ExpenseDataManager::getExpenseCategoryId($expenseCategory);
+    }
+
+    public static function getPaymentCategoryId($paymentCategory)
+    {
+        return ExpenseDataManager::getPaymentCategoryId($paymentCategory);
     }
 
     public static function getIncomeCategoryId($incomeCategory)
@@ -182,6 +230,12 @@ class SettingsDataManager extends \Core\Model
     {
         $LoggedUserId = Authentication::getLoggedUser()->user_id;
         return ExpenseDataManager::getUserExpenseCategories($LoggedUserId);
+    }
+
+    public static function getUserPaymentCategories()
+    {
+        $LoggedUserId = Authentication::getLoggedUser()->user_id;
+        return ExpenseDataManager::getUserPaymentCategories($LoggedUserId);
     }
 
 

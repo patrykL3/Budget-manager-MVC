@@ -345,6 +345,26 @@ class ExpenseDataManager extends \Core\Model
         };
     }
 
+    public static function deleteUserExpensesWithPaymentCategory($paymentCategoryId)
+    {
+        $paymentCategoryId = filter_var($paymentCategoryId, FILTER_VALIDATE_INT);
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        try {
+            $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $database->exec(
+                "DELETE FROM expenses, users_expenses
+                USING expenses
+                INNER JOIN users_expenses
+                ON expenses.expense_id = users_expenses.expense_id
+                WHERE payment_category_id=$paymentCategoryId AND user_id=$loggedUser->user_id"
+            );
+        } catch (PDOException $e) {
+            echo "<br>".$e->getMessage();
+        };
+    }
+
 
 
     public static function moveUserExpensesFromCategory($oldCategoryId, $categoryToCarryOverExpenses)
@@ -368,9 +388,26 @@ class ExpenseDataManager extends \Core\Model
         $updateCategoriesExpenses->execute();
     }
 
+    public static function movePaymentsToAnotherCategory($oldPaymentCategoryId, $categoryToCarryOverPayments)
+    {
+        $oldPaymentCategoryId = filter_var($oldPaymentCategoryId, FILTER_VALIDATE_INT);
+        $categoryIdToCarryOverPayments = ExpenseDataManager::getPaymentCategoryId($categoryToCarryOverPayments);
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
 
-
-
+        $updateExpenses = $database->prepare(
+            'UPDATE expenses AS e
+            INNER JOIN users_expenses AS ue
+            ON e.expense_id = ue.expense_id
+            SET e.payment_category_id = :new_payment_category_id
+            WHERE e.payment_category_id = :previous_payment_category_id AND ue.user_id = :user_id;
+            '
+        );
+        $updateExpenses->bindValue(':new_payment_category_id', $categoryIdToCarryOverPayments, PDO::PARAM_INT);
+        $updateExpenses->bindValue(':previous_payment_category_id', $oldPaymentCategoryId, PDO::PARAM_INT);
+        $updateExpenses->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+        $updateExpenses->execute();
+    }
 
 
     public static function getExpenseCategoryData($expenseCategoryId)
@@ -402,6 +439,43 @@ class ExpenseDataManager extends \Core\Model
 
             echo ExpenseDataManager::getExpenseCategoryId($data['newCategoryType']);
         }
+    }
+
+    public static function updateUserPaymentCategory($data = [])
+    {
+        if (ExpenseDataManager::validatePaymentCategoryData($data)) {
+            ExpenseDataManager::deleteUserPaymentCategory($data['paymentCategoryId']);
+            ExpenseDataManager::addPaymentCategory($data['newCategoryType']);
+            ExpenseDataManager::movePaymentsToAnotherCategory($data['paymentCategoryId'], $data['newCategoryType']);
+
+            echo ExpenseDataManager::getPaymentCategoryId($data['newCategoryType']);
+        }
+    }
+
+    private static function validatePaymentCategoryData($data = [])
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $userCurrentPaymentCategories = ExpenseDataManager::getUserPaymentCategories($loggedUser->user_id);
+
+        // categoryId
+        $data['paymentCategoryId'] = filter_input(INPUT_POST, 'paymentCategoryId');
+        $data['paymentCategoryId'] = filter_var($data['paymentCategoryId'], FILTER_VALIDATE_INT);
+        if (empty($data['paymentCategoryId'])) {
+            return false;
+        }
+
+        // Category;
+        $data['newCategoryType'] = filter_input(INPUT_POST, 'newCategoryType');
+        if (empty($data['newCategoryType'])) {
+            echo "empty";
+            return false;
+        }
+        foreach ($userCurrentPaymentCategories as $onceOfCurrentCategories) {
+            if ($onceOfCurrentCategories['payment_category_type'] === $data['newCategoryType'] && $onceOfCurrentCategories['payment_category_id'] != $data['paymentCategoryId']) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -468,6 +542,20 @@ class ExpenseDataManager extends \Core\Model
         };
     }
 
+    public static function deleteUserPaymentCategory($paymentCategoryIdToDelete)
+    {
+        $paymentCategoryIdToDelete = filter_var($paymentCategoryIdToDelete, FILTER_VALIDATE_INT);
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        try {
+            $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $database->exec("DELETE FROM users_categories_payments WHERE user_id=$loggedUser->user_id AND payment_category_id=$paymentCategoryIdToDelete");
+        } catch (PDOException $e) {
+            echo "<br>".$e->getMessage();
+        };
+    }
+
     public static function getIdUsedUserExpenseCategories()
     {
         $loggedUser = Authentication::getLoggedUser();
@@ -485,6 +573,23 @@ class ExpenseDataManager extends \Core\Model
         return $idUsedUserExpenseCategoriesQuery->fetchAll();
     }
 
+    public static function getIdUsedUserPaymentsCategories()
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        $idUsedUserPaymentCategoriesQuery = $database->prepare(
+            "SELECT DISTINCT e.payment_category_id
+            FROM expenses AS e
+            INNER JOIN users_expenses AS ue
+            ON e.expense_id = ue.expense_id
+            WHERE ue.user_id = :user_id;"
+        );
+        $idUsedUserPaymentCategoriesQuery->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+        $idUsedUserPaymentCategoriesQuery->execute();
+        return $idUsedUserPaymentCategoriesQuery->fetchAll();
+    }
+
 
     public static function addExpenseCategory($newExpenseCategory, $killerFeature, $killerFeatureValue)
     {
@@ -497,6 +602,17 @@ class ExpenseDataManager extends \Core\Model
         ExpenseDataManager::assignExpenseCategoryToUser($newExpenseCategory, $killerFeature, $killerFeatureValue);
     }
 
+    public static function addPaymentCategory($newPaymentCategory)
+    {
+        $newPaymentCategory = strtolower($newPaymentCategory);
+        $newPaymentCategory = ucfirst($newPaymentCategory);
+
+        if (!ExpenseDataManager::isPaymentCategoryInTable($newPaymentCategory)) {
+            ExpenseDataManager::savePaymentCategoryToPaymentsCategoriesTabel($newPaymentCategory);
+        }
+        ExpenseDataManager::assignPaymentCategoryToUser($newPaymentCategory);
+    }
+
 
     public static function saveExpenseCategoryToExpensesCategoriesTabel($newExpenseCategory)
     {
@@ -506,6 +622,16 @@ class ExpenseDataManager extends \Core\Model
         $assignExpenseToUserQuery->bindValue(':category_type', $newExpenseCategory, PDO::PARAM_STR);
         $assignExpenseToUserQuery->bindValue(':default_type', 0, PDO::PARAM_INT);
         $assignExpenseToUserQuery->execute();
+    }
+
+    public static function savePaymentCategoryToPaymentsCategoriesTabel($newPaymentCategory)
+    {
+        $database = static::getDB();
+
+        $assignPaymentToUserQuery = $database->prepare('INSERT INTO payments_categories (payment_category_type, default_type) VALUES (:category_type, :default_type)');
+        $assignPaymentToUserQuery->bindValue(':category_type', $newPaymentCategory, PDO::PARAM_STR);
+        $assignPaymentToUserQuery->bindValue(':default_type', 0, PDO::PARAM_INT);
+        $assignPaymentToUserQuery->execute();
     }
 
     public static function assignExpenseCategoryToUser($newExpenseCategory, $killerFeature, $killerFeatureValue)
@@ -527,8 +653,22 @@ class ExpenseDataManager extends \Core\Model
         $assignExpenseCategoryToUserQuery->execute();
     }
 
+    public static function assignPaymentCategoryToUser($newPaymentCategory)
+    {
+        $newPaymentCategoryId = ExpenseDataManager::getPaymentCategoryId($newPaymentCategory);
+        $loggedUser = Authentication::getLoggedUser();
 
+        $database = static::getDB();
 
+        $assignPaymentCategoryToUserQuery = $database->prepare(
+            'INSERT INTO users_categories_payments (user_id, payment_category_id)
+            VALUES (:user_id, :payment_category_id)'
+        );
+
+        $assignPaymentCategoryToUserQuery->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+        $assignPaymentCategoryToUserQuery->bindValue(':payment_category_id', $newPaymentCategoryId, PDO::PARAM_INT);
+        $assignPaymentCategoryToUserQuery->execute();
+    }
 
 
     public static function getExpenseCategoryId($expenseCategory)
@@ -541,6 +681,18 @@ class ExpenseDataManager extends \Core\Model
         $expenseCategoryId = $expenseCategoryIdQuery->fetch();
 
         return $expenseCategoryId[0];
+    }
+
+    public static function getPaymentCategoryId($paymentCategory)
+    {
+        $database = static::getDB();
+
+        $paymentCategoryIdQuery = $database->prepare('SELECT payment_category_id FROM payments_categories WHERE payment_category_type = :category_type');
+        $paymentCategoryIdQuery->bindValue(':category_type', $paymentCategory, PDO::PARAM_STR);
+        $paymentCategoryIdQuery->execute();
+        $paymentCategoryId = $paymentCategoryIdQuery->fetch();
+
+        return $paymentCategoryId[0];
     }
 
     public static function isCategoryAssignedToUser($expenseCategory)
@@ -559,6 +711,22 @@ class ExpenseDataManager extends \Core\Model
         return false;
     }
 
+    public static function isPaymentCategoryAssignedToUser($paymentCategory)
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $userPaymentCategories = ExpenseDataManager::getUserPaymentCategories($loggedUser->user_id);
+
+        $paymentCategory = strtolower($paymentCategory);
+        $paymentCategory = ucfirst($paymentCategory);
+
+        foreach ($userPaymentCategories as $onceOfCategories) {
+            if ($onceOfCategories['payment_category_type'] === $paymentCategory) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static function isExpenseCategoryInTable($expenseCategory)
     {
         $database = static::getDB();
@@ -569,5 +737,17 @@ class ExpenseDataManager extends \Core\Model
         $isExpenseCategoryInTable = $isExpenseCategoryInTableQuery->fetch();
 
         return $isExpenseCategoryInTable;
+    }
+
+    public static function isPaymentCategoryInTable($paymentCategory)
+    {
+        $database = static::getDB();
+
+        $isPaymentCategoryInTableQuery = $database->prepare('SELECT distinct 1 payment_category_type FROM payments_categories WHERE payment_category_type = :category_type');
+        $isPaymentCategoryInTableQuery->bindValue(':category_type', $paymentCategory, PDO::PARAM_STR);
+        $isPaymentCategoryInTableQuery->execute();
+        $isPaymentCategoryInTable = $isPaymentCategoryInTableQuery->fetch();
+
+        return $isPaymentCategoryInTable;
     }
 }
