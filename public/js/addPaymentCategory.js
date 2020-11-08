@@ -30,6 +30,7 @@ $(document).ready(function() {
     function createNewDivWithPaymentCategory(newPaymentCategoryId) {
         let newIdInputWithCategory = createNewId("valuePaymentCategoryId", newPaymentCategoryId);
         let newEditCategoryLinkId = createNewId("editPaymentCategoryId", newPaymentCategoryId);
+        let newEditingPaymentCategoryIconsId = createNewId("editingPaymentCategoryIconsId", newPaymentCategoryId);
         let newDeleteCategoryLinkId = createNewId("deletePaymentCategoryId", newPaymentCategoryId);
         newPaymentCategory = newPaymentCategory.toLowerCase();
         newPaymentCategory = newPaymentCategory.substr(0, 1).toUpperCase() + newPaymentCategory.substr(1);
@@ -40,6 +41,8 @@ $(document).ready(function() {
         newCategoryDiv.find('input').prop('id', newIdInputWithCategory);
         newCategoryDiv.find('.editPaymentCategory').prop('id', newEditCategoryLinkId);
         newCategoryDiv.find('.deleteUserPaymentCategory').prop('id', newDeleteCategoryLinkId);
+        newCategoryDiv.find('.editingCategoryIcons').prop('id', newEditingPaymentCategoryIconsId);
+        newCategoryDiv.removeAttr('hidden');
 
         $('#newPaymentCategory').val("");
     }

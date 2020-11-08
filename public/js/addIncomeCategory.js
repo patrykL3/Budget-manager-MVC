@@ -40,6 +40,7 @@ $(document).ready(function() {
         newCategoryDiv.find('input').prop('id', newIdInputWithCategory);
         newCategoryDiv.find('.editIncomeCategory').prop('id', newEditCategoryLinkId);
         newCategoryDiv.find('.deleteUserIncomeCategory').prop('id', newDeleteCategoryLinkId);
+        newCategoryDiv.removeAttr('hidden');
 
         $('#newIncomeCategory').val("");
     }

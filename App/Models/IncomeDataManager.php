@@ -5,6 +5,7 @@ namespace App\Models;
 use PDO;
 use \App\Authentication;
 use \App\Date;
+use \App\AuxiliaryFunctions;
 
 class IncomeDataManager extends \Core\Model
 {
@@ -271,8 +272,8 @@ class IncomeDataManager extends \Core\Model
 
     public static function addIncomeCategory($newIncomeCategory)
     {
-        $newIncomeCategory = strtolower($newIncomeCategory);
-        $newIncomeCategory = ucfirst($newIncomeCategory);
+        $newIncomeCategory = mb_strtolower($newIncomeCategory, 'UTF-8');
+        $newIncomeCategory = AuxiliaryFunctions::ucfirstUtf8($newIncomeCategory);
 
         if (!IncomeDataManager::isIncomeCategoryInTable($newIncomeCategory)) {
             IncomeDataManager::saveIncomeCategoryToIncomesCategoriesTabel($newIncomeCategory);
@@ -334,8 +335,8 @@ class IncomeDataManager extends \Core\Model
         $loggedUser = Authentication::getLoggedUser();
         $userIncomeCategories = IncomeDataManager::getUserIncomeCategories($loggedUser->user_id);
 
-        $incomeCategory = strtolower($incomeCategory);
-        $incomeCategory = ucfirst($incomeCategory);
+        $incomeCategory = mb_strtolower($incomeCategory, 'UTF-8');
+        $incomeCategory = AuxiliaryFunctions::ucfirstUtf8($incomeCategory);
 
         foreach ($userIncomeCategories as $onceOfCategories) {
             if ($onceOfCategories['category_type'] === $incomeCategory) {

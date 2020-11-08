@@ -9,7 +9,7 @@ $(document).ready(function() {
         //$(("#").concat(idToShow)).show('slow');
     });
 
-    $(".delete").click(function() {
+    $(document).on('click', '.delete', function() {
         let clickedShape = $(this);
         (clickedShape.parent()).parent().attr('hidden', 'hidden');
     });

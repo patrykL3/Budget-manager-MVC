@@ -5,6 +5,7 @@ namespace App\Models;
 use PDO;
 use \App\Authentication;
 use \App\Date;
+use \App\AuxiliaryFunctions;
 
 class ExpenseDataManager extends \Core\Model
 {
@@ -593,8 +594,8 @@ class ExpenseDataManager extends \Core\Model
 
     public static function addExpenseCategory($newExpenseCategory, $killerFeature, $killerFeatureValue)
     {
-        $newExpenseCategory = strtolower($newExpenseCategory);
-        $newExpenseCategory = ucfirst($newExpenseCategory);
+        $newExpenseCategory = mb_strtolower($newExpenseCategory, 'UTF-8');
+        $newExpenseCategory = AuxiliaryFunctions::ucfirstUtf8($newExpenseCategory);
 
         if (!ExpenseDataManager::isExpenseCategoryInTable($newExpenseCategory)) {
             ExpenseDataManager::saveExpenseCategoryToExpensesCategoriesTabel($newExpenseCategory);
@@ -604,14 +605,16 @@ class ExpenseDataManager extends \Core\Model
 
     public static function addPaymentCategory($newPaymentCategory)
     {
-        $newPaymentCategory = strtolower($newPaymentCategory);
-        $newPaymentCategory = ucfirst($newPaymentCategory);
+        $newPaymentCategory = mb_strtolower($newPaymentCategory, 'UTF-8');
+        $newPaymentCategory = AuxiliaryFunctions::ucfirstUtf8($newPaymentCategory);
 
         if (!ExpenseDataManager::isPaymentCategoryInTable($newPaymentCategory)) {
             ExpenseDataManager::savePaymentCategoryToPaymentsCategoriesTabel($newPaymentCategory);
         }
         ExpenseDataManager::assignPaymentCategoryToUser($newPaymentCategory);
     }
+
+
 
 
     public static function saveExpenseCategoryToExpensesCategoriesTabel($newExpenseCategory)
@@ -700,8 +703,8 @@ class ExpenseDataManager extends \Core\Model
         $loggedUser = Authentication::getLoggedUser();
         $userExpenseCategories = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
 
-        $expenseCategory = strtolower($expenseCategory);
-        $expenseCategory = ucfirst($expenseCategory);
+        $expenseCategory = mb_strtolower($expenseCategory, 'UTF-8');
+        $expenseCategory = AuxiliaryFunctions::ucfirstUtf8($expenseCategory);
 
         foreach ($userExpenseCategories as $onceOfCategories) {
             if ($onceOfCategories['category_type'] === $expenseCategory) {
@@ -716,8 +719,8 @@ class ExpenseDataManager extends \Core\Model
         $loggedUser = Authentication::getLoggedUser();
         $userPaymentCategories = ExpenseDataManager::getUserPaymentCategories($loggedUser->user_id);
 
-        $paymentCategory = strtolower($paymentCategory);
-        $paymentCategory = ucfirst($paymentCategory);
+        $paymentCategory = mb_strtolower($paymentCategory, 'UTF-8');
+        $paymentCategory = AuxiliaryFunctions::ucfirstUtf8($paymentCategory);
 
         foreach ($userPaymentCategories as $onceOfCategories) {
             if ($onceOfCategories['payment_category_type'] === $paymentCategory) {

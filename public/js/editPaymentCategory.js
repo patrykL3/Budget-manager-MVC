@@ -8,8 +8,6 @@ $(document).ready(function() {
         let linkId = $(this).attr("id");
         paymentCategoryId = getPaymentCategoryId(linkId);
         paymentValue = $('#valuePaymentCategoryId' + paymentCategoryId).val();
-        console.log(paymentCategoryId);
-        console.log(paymentValue);
 
         $("#editingPaymentCategoryIconsId" + paymentCategoryId).removeAttr('hidden');
         $("#valuePaymentCategoryId" + paymentCategoryId).removeAttr('disabled');

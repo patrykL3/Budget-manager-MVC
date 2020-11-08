@@ -113,6 +113,8 @@ class Settings extends Authentication_login
         $newPaymentCategory = filter_input(INPUT_POST, 'newPaymentCategory');
         $newPaymentCategoryId="";
 
+
+
         if (!SettingsDataManager::isPaymentCategoryAssignedToUser($newPaymentCategory) && $newPaymentCategory !="") {
             SettingsDataManager::addNewPaymentCategory($newPaymentCategory);
             $newPaymentCategoryId = SettingsDataManager::getPaymentCategoryId($newPaymentCategory);
