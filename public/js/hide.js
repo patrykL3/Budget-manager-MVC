@@ -1,12 +1,8 @@
 $(document).ready(function() {
 
+
     $(".show").click(function() {
-        let clickedShapeId = $(this).attr('id');
-        idToShow = clickedShapeId.replace('edit-', '');
-        $(".standardHidden").attr('hidden', 'hidden');
-        //$(".standardHidden").hide('slow');
-        $(("#").concat(idToShow)).removeAttr('hidden');
-        //$(("#").concat(idToShow)).show('slow');
+        $(".standardHidden").collapse("hide");
     });
 
     $(document).on('click', '.delete', function() {

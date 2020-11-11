@@ -514,22 +514,8 @@ class ExpenseDataManager extends \Core\Model
 
         return true;
     }
-    /*
-        public static function validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType)
-        {
-            $loggedUser = Authentication::getLoggedUser();
-            $userCurrentExpenseCategories = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
 
 
-            foreach ($userCurrentExpenseCategories as $onceOfCurrentCategories) {
-                if ($onceOfCurrentCategories['category_type'] === $expenseCategoryType && $onceOfCurrentCategories['expense_category_id'] != $expenseCategoryId) {
-                    return false;
-                }
-            }
-            return true;
-
-        }
-    */
     public static function deleteUserExpenseCategory($expenseCategoryIdToDelete)
     {
         $expenseCategoryIdToDelete = filter_var($expenseCategoryIdToDelete, FILTER_VALIDATE_INT);

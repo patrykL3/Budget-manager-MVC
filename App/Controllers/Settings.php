@@ -148,17 +148,7 @@ class Settings extends Authentication_login
         }
         echo json_encode($error);
     }
-    /*
-        public function validateExpenseCategoryChangeType()
-        {
-            $expenseCategoryId = $_GET['expenseCategoryId'];
-            $expenseCategoryType = $_GET['expenseCategoryType'];
 
-            $isValid =  SettingsDataManager::validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType);
-
-            echo json_encode($isValid);
-        }
-        */
 
     public function addIncomeCategoryAction()
     {

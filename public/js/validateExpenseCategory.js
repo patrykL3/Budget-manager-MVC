@@ -26,22 +26,11 @@ $(document).ready(function() {
             },
             expenseCategoryType: {
                 required: true
-                /*remote: {
-                    url: "/Settings/validateExpenseCategoryChangeType",
-                    type: "get",
-                    async: true,
-                    data: {
-                        expenseCategoryId: function() {
-                            return expenseCategoryId;
-                        }
-                    }
-                }*/
             }
         },
         messages: {
             amount: 'Wprowadż kwotę lub zrezygnuj z limitu',
             expenseCategoryType: {
-                //remote: 'Posiadasz już taką kategorię',
                 required: 'Wprowadż nazwę kategorii'
             }
         }
