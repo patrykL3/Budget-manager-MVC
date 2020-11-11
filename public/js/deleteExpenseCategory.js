@@ -63,8 +63,6 @@ $(document).ready(function() {
     });
 
 
-
-
     function getExpenseCategoryId(linkId) {
         let expenseCategoryId = linkId.replace("deleteExpenseCategoryId", "");
         return expenseCategoryId;
@@ -79,7 +77,7 @@ $(document).ready(function() {
 
     function openDeleteUsedExpenseCategoryModal(expenseCategoryId) {
         let valueChosenExpenseCategoryToDelete = getValueExpenseCategory(expenseCategoryId);
-        
+
         $('#expenseCategorySelector').empty();
         getExpenseCategoriesWithoutRemoveCategoryToModal(valueChosenExpenseCategoryToDelete);
 

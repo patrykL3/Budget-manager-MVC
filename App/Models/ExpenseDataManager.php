@@ -129,7 +129,6 @@ class ExpenseDataManager extends \Core\Model
         $database = static::getDB();
 
         $userExpenseQuery = $database->prepare(
-            //'SELECT category_type, uce.expense_category_id
             'SELECT *
             FROM users_categories_expenses AS uce
             INNER JOIN expenses_categories AS ec
@@ -514,22 +513,8 @@ class ExpenseDataManager extends \Core\Model
 
         return true;
     }
-    /*
-        public static function validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType)
-        {
-            $loggedUser = Authentication::getLoggedUser();
-            $userCurrentExpenseCategories = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
 
 
-            foreach ($userCurrentExpenseCategories as $onceOfCurrentCategories) {
-                if ($onceOfCurrentCategories['category_type'] === $expenseCategoryType && $onceOfCurrentCategories['expense_category_id'] != $expenseCategoryId) {
-                    return false;
-                }
-            }
-            return true;
-
-        }
-    */
     public static function deleteUserExpenseCategory($expenseCategoryIdToDelete)
     {
         $expenseCategoryIdToDelete = filter_var($expenseCategoryIdToDelete, FILTER_VALIDATE_INT);
@@ -614,8 +599,6 @@ class ExpenseDataManager extends \Core\Model
         }
         ExpenseDataManager::assignPaymentCategoryToUser($newPaymentCategory);
     }
-
-
 
 
     public static function saveExpenseCategoryToExpensesCategoriesTabel($newExpenseCategory)

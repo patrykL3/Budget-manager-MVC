@@ -134,12 +134,6 @@ class PeriodDataManager extends \Core\Model
     }
 
 
-    public static function validateIncomeEditData($data = [])
-    {
-        IncomeDataManager::validateIncomeEditData($data);
-    }
-
-
     public static function updateIncome($data = [])
     {
         IncomeDataManager::updateIncome($data);

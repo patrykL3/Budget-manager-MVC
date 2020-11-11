@@ -152,7 +152,6 @@ class SettingsDataManager extends \Core\Model
     }
 
 
-
     public static function validateIncomeEditData($data = [])
     {
         IncomeDataManager::validateIncomeEditData($data);
@@ -213,12 +212,7 @@ class SettingsDataManager extends \Core\Model
     {
         return IncomeDataManager::getIncomeCategoryId($incomeCategory);
     }
-/*
-    public static function validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType)
-    {
-        return ExpenseDataManager::validateExpenseCategoryChangeType($expenseCategoryId, $expenseCategoryType);
-    }
-    */
+
 
     public static function getUserIncomeCategories()
     {

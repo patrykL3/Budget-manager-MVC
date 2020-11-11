@@ -226,12 +226,6 @@ class User extends \Core\Model
         $loginData['email_or_login'] = filter_input(INPUT_POST, 'email_or_login');
         $loginData['password'] = filter_input(INPUT_POST, 'password');
 
-        /*********************************/
-            $loginData['email_or_login'] = 'zxc';
-            $loginData['password'] = 'Zxc123';
-        /*********************************/
-
-
         $user = static::findByEmail($loginData['email_or_login']);
         if (!$user) {
             $user = static::findByLogin($loginData['email_or_login']);
@@ -367,11 +361,9 @@ class User extends \Core\Model
 
         if ($data['newPassword'] != $data['newPasswordConfirmation']) {
             return false;
-            //$this->errors['passwordConfirmation'] = 'Hasła nie są identyczne';
         }
         if (strlen($data['newPassword']) < 6 || preg_match('/.*[a-z]+.*/i', $data['newPassword']) == 0 || preg_match('/.*\d+.*/i', $data['newPassword']) == 0) {
             return false;
-            //$this->errors['password'] = 'Hasło musi zawierać przynajmniej 6 znaków, jedną cyfrę i literę';
         }
 
         return true;

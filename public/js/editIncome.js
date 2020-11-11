@@ -4,8 +4,8 @@ $(document).ready(function() {
 
 
     $(document).on('click', '.editIncome', function() {
-
-        income_id = $(this).attr("id");
+        let linkId = $(this).attr("id");
+        income_id = getIncomeId(linkId);
 
         $.ajax({
             type: "POST",
@@ -71,6 +71,13 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
+
+
+    function getIncomeId(linkId) {
+        let incomeId = linkId.replace("editIncomeId", "");
+        return incomeId;
+    }
+
 
     function getIncomeSpanId(baseSpan, incomeId) {
         let spanId = baseSpan.concat(incomeId);
