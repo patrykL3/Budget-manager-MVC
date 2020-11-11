@@ -5,6 +5,8 @@ $(document).ready(function() {
     let currentMonthExpense = 0;
     let currentCategory = "";
 
+    $("#killerFeature").hide();
+
     $("#expenseCategory").change(function() {
         currentCategory = $("#expenseCategory").val();
         setKiller(currentCategory);
@@ -20,18 +22,20 @@ $(document).ready(function() {
     });
 
     function setKiller(category) {
-        $("#killerFeature").attr('hidden', 'hidden');
+        $("#killerFeature").hide("slow");
+
         $.ajax({
             type: "POST",
             url: "/Expense/getKillerData",
             success: function(data) {
                 userExpensesCategoriesData = jQuery.parseJSON(data);
-                assignDataForKiller(userExpensesCategoriesData, category);
+                assignDataToKiller(userExpensesCategoriesData, category);
             }
         });
+
     }
 
-    function assignDataForKiller(userExpensesCategoriesData, category) {
+    function assignDataToKiller(userExpensesCategoriesData, category) {
         $.each(userExpensesCategoriesData, function(i, userExpenseCategoryData) {
             if (category == userExpenseCategoryData.category_type && userExpenseCategoryData.killer_feature == 1) {
                 let amount = getAmount();
@@ -39,12 +43,12 @@ $(document).ready(function() {
                 currentMonthExpense = parseFloat(userExpenseCategoryData.current_month_expense);
                 sumExpensesAndNewAmount = currentMonthExpense + amount;
 
-                $("#killerFeature").removeAttr('hidden');
                 $("#limitValue").text("Limit: " + userExpenseCategoryData.killer_feature_value);
                 $("#currentMonthExpense").text("Dotychczas wydano: " + userExpenseCategoryData.current_month_expense);
                 $("#leftToSpend").text("Pozostało do wydania: " + leftToSpend);
                 $("#sumExpensesAndNewAmount").text(sumExpensesAndNewAmount);
-                setBackgroundKiller(leftToSpend, amount);
+                ($("#killerFeature").css("display") == "flex") ? setBackgroundKillerWithDelay(leftToSpend, amount): setBackgroundKiller(leftToSpend, amount);
+                $("#killerFeature").show("slow");
             }
         });
     }
@@ -64,6 +68,12 @@ $(document).ready(function() {
         }
 
         return leftToSpend;
+    }
+
+    function setBackgroundKillerWithDelay(leftToSpend, amount) {
+        setTimeout(function() {
+            setBackgroundKiller(leftToSpend, amount);
+        }, 400);
     }
 
     function setBackgroundKiller(leftToSpend, amount) {
