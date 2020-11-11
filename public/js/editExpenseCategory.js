@@ -62,7 +62,6 @@ $(document).ready(function() {
             });
             e.preventDefault();
         }
-        //e.preventDefault();
     });
 
     function createNewDivWithExpenseCategory(newExpenseCategoryId, newCategoryType) {

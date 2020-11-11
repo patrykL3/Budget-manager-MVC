@@ -152,7 +152,6 @@ class SettingsDataManager extends \Core\Model
     }
 
 
-
     public static function validateIncomeEditData($data = [])
     {
         IncomeDataManager::validateIncomeEditData($data);

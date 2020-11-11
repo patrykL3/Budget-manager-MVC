@@ -18,18 +18,13 @@ $(document).ready(function() {
                     "newPasswordConfirmation": newPasswordConfirmation,
                 },
                 success: function(data) {
-
                     errorCurrentPassword = jQuery.parseJSON(data);
 
-
                     if (errorCurrentPassword != 0) {
-                        console.log("błąd");
                         $("#incorrectPasswordData").removeAttr('hidden');
-
                     } else {
                         $("#edit-user-password").modal('hide');
                     }
-
                 }
             });
             e.preventDefault();

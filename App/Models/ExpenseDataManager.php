@@ -129,7 +129,6 @@ class ExpenseDataManager extends \Core\Model
         $database = static::getDB();
 
         $userExpenseQuery = $database->prepare(
-            //'SELECT category_type, uce.expense_category_id
             'SELECT *
             FROM users_categories_expenses AS uce
             INNER JOIN expenses_categories AS ec
@@ -600,8 +599,6 @@ class ExpenseDataManager extends \Core\Model
         }
         ExpenseDataManager::assignPaymentCategoryToUser($newPaymentCategory);
     }
-
-
 
 
     public static function saveExpenseCategoryToExpensesCategoriesTabel($newExpenseCategory)

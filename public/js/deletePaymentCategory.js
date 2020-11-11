@@ -63,8 +63,6 @@ $(document).ready(function() {
     });
 
 
-
-
     function getPaymentCategoryId(linkId) {
         let paymentCategoryId = linkId.replace("deletePaymentCategoryId", "");
         return paymentCategoryId;
