@@ -152,7 +152,7 @@ class User extends \Core\Model
     private function addExpenseCategory($expenseCategoryId, $userId)
     {
         $database = static::getDB();
-        $addExpenseQuery = $database->prepare('INSERT INTO users_categories_expenses VALUES (:user_id, :expense_category_id)');
+        $addExpenseQuery = $database->prepare('INSERT INTO users_categories_expenses VALUES (:user_id, :expense_category_id, 0, 0)');
         $addExpenseQuery->bindValue(':user_id', $userId, PDO::PARAM_INT);
         $addExpenseQuery->bindValue(':expense_category_id', $expenseCategoryId, PDO::PARAM_INT);
         $addExpenseQuery->execute();
