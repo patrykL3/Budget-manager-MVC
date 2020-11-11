@@ -129,7 +129,8 @@ class ExpenseDataManager extends \Core\Model
         $database = static::getDB();
 
         $userExpenseQuery = $database->prepare(
-            'SELECT category_type, uce.expense_category_id
+            //'SELECT category_type, uce.expense_category_id
+            'SELECT *
             FROM users_categories_expenses AS uce
             INNER JOIN expenses_categories AS ec
             ON uce.expense_category_id = ec.expense_category_id
@@ -752,5 +753,43 @@ class ExpenseDataManager extends \Core\Model
         $isPaymentCategoryInTable = $isPaymentCategoryInTableQuery->fetch();
 
         return $isPaymentCategoryInTable;
+    }
+
+
+    public static function getKillerData()
+    {
+        $loggedUser = Authentication::getLoggedUser();
+
+        $killerData = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
+
+        foreach ($killerData as &$categoryKillerData) {
+            if ($categoryKillerData['killer_feature'] == 1) {
+                $currentMonthExpense = ExpenseDataManager::getCurrentMonthExpense($categoryKillerData['expense_category_id']);
+                if(!$currentMonthExpense) {
+                    $currentMonthExpense = 0;
+                }
+                $categoryKillerData[ 'current_month_expense'] = $currentMonthExpense;
+            }
+        };
+        return $killerData;
+    }
+
+    public static function getCurrentMonthExpense($expenseCategoryId)
+    {
+        $loggedUser = Authentication::getLoggedUser();
+        $database = static::getDB();
+
+        $currentMonthExpenseQuery = $database->prepare('SELECT SUM(e.amount)
+        FROM expenses AS e
+        INNER JOIN users_expenses AS ue
+        ON e.expense_id = ue.expense_id
+        WHERE ue.user_id = :user_id AND e.expense_category_id = :expense_category_id AND MONTH(e.date_of_expense) = MONTH(:currentDate)');
+        $currentMonthExpenseQuery->bindValue(':user_id', $loggedUser->user_id, PDO::PARAM_INT);
+        $currentMonthExpenseQuery->bindValue(':expense_category_id', $expenseCategoryId, PDO::PARAM_INT);
+        $currentMonthExpenseQuery->bindValue(':currentDate', Date::getCurrentDate(), PDO::PARAM_STR);
+        $currentMonthExpenseQuery->execute();
+        $currentMonthExpense = $currentMonthExpenseQuery->fetch();
+
+        return $currentMonthExpense[0];
     }
 }

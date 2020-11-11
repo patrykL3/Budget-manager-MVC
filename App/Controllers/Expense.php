@@ -33,4 +33,12 @@ class Expense extends Authentication_login
             View::renderTemplate('Expense/open.html', ['data' => $this->expenseDataManager]);
         }
     }
+
+    public static function getKillerDataAction()
+    {
+        $killerData = ExpenseDataManager::getKillerData();
+
+        echo json_encode($killerData);
+    }
+
 }
