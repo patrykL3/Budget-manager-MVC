@@ -4,8 +4,8 @@ $(document).ready(function() {
 
 
     $(document).on('click', '.editExpense', function() {
-
-        expense_id = $(this).attr("id");
+        let linkId = $(this).attr("id");
+        expense_id = getExpenseId(linkId);
 
         $.ajax({
             type: "POST",
@@ -80,6 +80,11 @@ $(document).ready(function() {
             e.preventDefault();
         }
     });
+
+    function getExpenseId(linkId) {
+        let expenseId = linkId.replace("editExpenseId", "");
+        return expenseId;
+    }
 
 
     function getExpenseSpanId(baseSpan, expenseId) {

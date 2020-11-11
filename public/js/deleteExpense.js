@@ -4,7 +4,8 @@ $(document).ready(function() {
 
 
     $(document).on('click', '.deleteExpense', function() {
-        expenseId = $(this).attr("id");
+        let linkId = $(this).attr("id");
+        expenseId = getExpenseId(linkId);
         let clickedShape = $(this);
 
         $.ajax({
@@ -18,4 +19,11 @@ $(document).ready(function() {
             }
         });
     });
+
+    function getExpenseId(linkId) {
+        let expenseId = linkId.replace("deleteExpenseId", "");
+        return expenseId;
+    }
+
+
 });

@@ -4,7 +4,8 @@ $(document).ready(function() {
 
 
     $(document).on('click', '.deleteIncome', function() {
-        incomeId = $(this).attr("id");
+        let linkId = $(this).attr("id");
+        incomeId = getIncomeId(linkId);
         let clickedShape = $(this);
 
         $.ajax({
@@ -18,4 +19,9 @@ $(document).ready(function() {
             }
         });
     });
+
+    function getIncomeId(linkId) {
+        let incomeId = linkId.replace("deleteIncomeId", "");
+        return incomeId;
+    }
 });
