@@ -22,48 +22,67 @@
 
         <header>
             <div class="row justify-content-center pl-4 pr-4">
-                <div class="col-10 col-md-7 col-lg-8 mt-4 portrait text-center">
+                <div class="col-10 col-md-8 mt-4 portrait text-center">
                     <h2 class="h4 describe-inline-balance font-weight-bold text-white pt-3 pb-2">{{ data.periodTitle }}</h2>
                 </div>
             </div>
         </header>
+
         {% if data.period == 'custom' %}
         <section>
-            <div id="custom-balance-div" class=" container justify-content-center col-10 col-md-7 col-lg-8 mt-4 portrait text-center pb-3">
-                <form id="formDates" method="post" action="/balance/open?period=custom">
-                    <h2 class="h5 text-white pt-2 pb-2">Wybierz zakres:</h2>
-                    <div class="row justify-content-center">
-                        <span class="mr-2 text-white d-inline text-4">Początek:</span>
-                        <input type="date" class="form-control max-width-4 d-inline pl-2 pr-2" name="balance_start_date" value="{{data.balance_start_date}}">
-                    </div>
-                    <div class="text-white mb-2 w-100 text-5 ml-4 pl-2">{{ data.errors['correctStartDateRequired'] }}</div>
-                    <div class="row justify-content-center">
-                        <span class="mr-2 text-white ml-3 d-inline text-4 align-self-center">Koniec:</span>
-                        <input type="date" class="form-control max-width-4 d-inline mt-2 pl-2 pr-2" name="balance_end_date" value="{{ data.balance_end_date }}">
-                    </div>
-                    <div class="text-white mb-2 w-100 text-5 ml-4 pl-2">{{ data.errors['correctEndDateRequired'] }}</div>
-                    <div class="row justify-content-center">
-                        <button type="submit" class="min-width-4 mt-3 btn btn-success btn-md btn-inline">
+            <div class="row justify-content-center pl-4 pr-4">
+                <div class="col-10 col-md-8 mt-3 portrait text-center">
+                    <form id="formDates" method="post" action="/balance/open?period=custom">
+                        <h2 class="h5 text-white pt-2 pb-2">Wybierz zakres:</h2>
+                        <div class="row justify-content-center">
+                            <span class="mr-2 text-white d-inline text-4">Początek:</span>
+                            <input type="date" class="form-control max-width-4 d-inline pl-2 pr-2" name="balance_start_date" value="{{data.balance_start_date}}">
+                        </div>
+                        <div class="text-white mb-2 w-100 text-5 ml-4 pl-2">{{ data.errors['correctStartDateRequired'] }}</div>
+                        <div class="row justify-content-center">
+                            <span class="mr-2 text-white ml-3 d-inline text-4 align-self-center">Koniec:</span>
+                            <input type="date" class="form-control max-width-4 d-inline mt-2 pl-2 pr-2" name="balance_end_date" value="{{ data.balance_end_date }}">
+                        </div>
+                        <div class="text-white mb-2 w-100 text-5 ml-4 pl-2">{{ data.errors['correctEndDateRequired'] }}</div>
+                        <div class="row justify-content-center">
+                            <button type="submit" class="min-width-4 mt-3 mb-3 btn btn-success btn-md btn-inline">
 
-                            <svg width="1.7em" height="1.7em" viewBox="0 0 16 16" class="bi bi-check2-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M15.354 2.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L8 9.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
-                                <path fill-rule="evenodd" d="M8 2.5A5.5 5.5 0 1 0 13.5 8a.5.5 0 0 1 1 0 6.5 6.5 0 1 1-3.25-5.63.5.5 0 1 1-.5.865A5.472 5.472 0 0 0 8 2.5z" />
-                            </svg>
-                        </button>
-                    </div>
-                </form>
+                                <svg width="1.7em" height="1.7em" viewBox="0 0 16 16" class="bi bi-check2-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M15.354 2.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L8 9.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                    <path fill-rule="evenodd" d="M8 2.5A5.5 5.5 0 1 0 13.5 8a.5.5 0 0 1 1 0 6.5 6.5 0 1 1-3.25-5.63.5.5 0 1 1-.5.865A5.472 5.472 0 0 0 8 2.5z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </section>
         {% endif %}
 
         <section>
+            {% if not data.errors['withoutPeriod'] %}
+            <div class="row justify-content-center pl-4 pr-4 mb-1 mt-3">
+                {% if data.balanceValue > 0 %}
+                <div class='col-10 col-md-8 success-radius text-center pb-3'>
+                    <h2 class='h5 text-white pt-2 pb-2 mt-2 font-weight-bold'>Bilans: {{ data.balanceValue }} zł</h2>
+                    <span class='mr-2 text-white d-inline text-4 align-self-center font-weight-bold'>Gratulacje! Świetnie zarządzasz finansami!</span>
+                </div>
+                {% else %}
+                <div class='col-10 col-md-8 bg-warning rounded text-center pb-3'>
+                    <h2 class='h5 text-white pt-2 pb-2 mt-2 font-weight-bold'>Bilans: {{ data.balanceValue }} zł</h2>
+                    <span class='mr-2 text-white d-inline text-4 align-self-center font-weight-bold'>Nie uzyskano dodatniego bilansu!</span>
+                </div>
+                {% endif %}
+            </div>
+
+
             <div class="row justify-content-center">
-                <div class="col-10 col-md-7 col-lg-4 mt-4">
+                <div class="col-10 col-md-8 col-lg-4 mt-4">
                     <header>
                         <h2 class="h5 text-white p-2 bg-success rounded text-center">Przychody</h2>
                     </header>
                     <section>
-                        <ul class="list-group text-center">
+                        <ul class="list-group text-center mb-3">
                             {% for key in data.incomesFromPeriod|keys %}
                             <li class='list-group-item list-group-item-success'>
                                 <span id="categoryIncomeId{{ data.incomesFromPeriod[key].income_id }}" class='mr-1'>{{ data.incomesFromPeriod[key].category_type }}</span>
@@ -185,12 +204,12 @@
 
                     </section>
                 </div>
-                <div class="col-10 col-md-7 col-lg-4 mt-4">
+                <div class="col-10 col-md-8 col-lg-4 mt-4">
                     <header>
                         <h2 class="h5 text-white p-2 bg-warning rounded text-center">Wydatki</h2>
                     </header>
                     <section>
-                        <ul class="list-group text-center">
+                        <ul id="expenseList" class="list-group text-center">
                             {% for key in data.expensesFromPeriod|keys %}
                             <li class='list-group-item list-group-item-warning'>
                                 <span id="categoryExpenseId{{ data.expensesFromPeriod[key].expense_id }}" class='mr-1'>{{ data.expensesFromPeriod[key].category_type }}</span>
@@ -332,21 +351,7 @@
                 </div>
             </div>
 
-            <div class="row justify-content-center pl-4 pr-4 mb-4 mt-4">
-                {% if data.balanceValue > 0 %}
-                <div class='col-10 col-md-8 success-radius text-center pb-3'>
-                    <h2 class='h5 text-white pt-2 pb-2 mt-2 font-weight-bold'>Bilans: {{ data.balanceValue }} zł</h2>
-                    <span class='mr-2 text-white d-inline text-4 align-self-center font-weight-bold'>Gratulacje! Świetnie zarządzasz finansami!</span>
-                </div>
-                {% else %}
-                <div class='col-10 col-md-8 bg-warning rounded text-center pb-3'>
-                    <h2 class='h5 text-white pt-2 pb-2 mt-2 font-weight-bold'>Bilans: {{ data.balanceValue }} zł</h2>
-                    <span class='mr-2 text-white d-inline text-4 align-self-center font-weight-bold'>Nie uzyskano dodatniego bilansu!</span>
-                </div>
-                {% endif %}
-            </div>
-
-            <div class="row justify-content-center pl-4 pr-4 mb-3">
+            <div id="pieChartTitle" class="row justify-content-center pl-4 pr-4 mb-3 mt-4">
                 <div class="col-10 col-md-8 primary-radius text-center pb-3 ">
                     <h2 class="h5 text-white pt-3 font-weight-bold">Wydatki z wybranego okresu</h2>
                 </div>
@@ -354,7 +359,9 @@
             <figure class="highcharts-figure">
                 <div id="container"></div>
             </figure>
+            {% endif %}
         </section>
+
     </div>
 </main>
 
@@ -374,6 +381,7 @@
 <script src="/js/editIncome.js"></script>
 <script src="/js/deleteIncome.js"></script>
 <script src="/js/deleteExpense.js"></script>
+<script src="/js/balance.js"></script>
 
 <script type='text/javascript'>
     // Build the chart
