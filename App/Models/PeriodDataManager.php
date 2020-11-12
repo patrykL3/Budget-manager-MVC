@@ -64,6 +64,7 @@ class PeriodDataManager extends \Core\Model
             if (isset($this->balance_start_date)) {
                 return $this->checkReceivedDates();
             }
+            $this->errors['withoutPeriod'] = true;
             return false;
         }
         return true;
