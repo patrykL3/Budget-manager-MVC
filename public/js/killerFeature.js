@@ -7,9 +7,21 @@ $(document).ready(function() {
 
     $("#killerFeature").hide();
 
+
     $("#expenseCategory").change(function() {
         currentCategory = $("#expenseCategory").val();
-        setKiller(currentCategory);
+        $("#killerFeature").hide("slow");
+        if (isCurrentMonthExpense()) {
+            setKiller(currentCategory);
+        }
+    });
+
+    $("#date-to-fill").change(function() {
+        if (isCurrentMonthExpense() && $("#killerFeature").css("display") != "flex") {
+            setKiller(currentCategory);
+        } else if (!isCurrentMonthExpense() && $("#killerFeature").css("display") == "flex") {
+            $("#killerFeature").hide("slow");
+        }
     });
 
     $('#amount').bind("keyup", function(event) {
@@ -17,12 +29,11 @@ $(document).ready(function() {
         currentMonthExpense = parseFloat(currentMonthExpense);
         sumExpensesAndNewAmount = currentMonthExpense + amount;
 
-        setBackgroundKiller(leftToSpend, amount);
+        setBackgroundKiller(limit, sumExpensesAndNewAmount);
         $("#sumExpensesAndNewAmount").text(sumExpensesAndNewAmount);
     });
 
     function setKiller(category) {
-        $("#killerFeature").hide("slow");
 
         $.ajax({
             type: "POST",
@@ -32,22 +43,22 @@ $(document).ready(function() {
                 assignDataToKiller(userExpensesCategoriesData, category);
             }
         });
-
     }
 
     function assignDataToKiller(userExpensesCategoriesData, category) {
         $.each(userExpensesCategoriesData, function(i, userExpenseCategoryData) {
             if (category == userExpenseCategoryData.category_type && userExpenseCategoryData.killer_feature == 1) {
                 let amount = getAmount();
-                leftToSpend = getLeftToSpend(userExpenseCategoryData.killer_feature_value, userExpenseCategoryData.current_month_expense);
+                limit = userExpenseCategoryData.killer_feature_value;
+                leftToSpend = getLeftToSpend(limit, userExpenseCategoryData.current_month_expense);
                 currentMonthExpense = parseFloat(userExpenseCategoryData.current_month_expense);
                 sumExpensesAndNewAmount = currentMonthExpense + amount;
 
-                $("#limitValue").text("Limit: " + userExpenseCategoryData.killer_feature_value);
+                $("#limitValue").text("Limit: " + limit);
                 $("#currentMonthExpense").text("Dotychczas wydano: " + userExpenseCategoryData.current_month_expense);
                 $("#leftToSpend").text("Pozostało do wydania: " + leftToSpend);
                 $("#sumExpensesAndNewAmount").text(sumExpensesAndNewAmount);
-                ($("#killerFeature").css("display") == "flex") ? setBackgroundKillerWithDelay(leftToSpend, amount): setBackgroundKiller(leftToSpend, amount);
+                ($("#killerFeature").css("display") == "flex") ? setBackgroundKillerWithDelay(limit, sumExpensesAndNewAmount): setBackgroundKiller(limit, sumExpensesAndNewAmount);
                 $("#killerFeature").show("slow");
             }
         });
@@ -63,27 +74,41 @@ $(document).ready(function() {
 
     function getLeftToSpend(killerFeatureValue, currentMonthExpense) {
         let leftToSpend = killerFeatureValue - currentMonthExpense;
-        if (leftToSpend < 0) {
-            leftToSpend = 0;
-        }
+
+        if (leftToSpend < 0) leftToSpend = 0;
+        leftToSpend = (leftToSpend).toFixed(2);
 
         return leftToSpend;
     }
 
-    function setBackgroundKillerWithDelay(leftToSpend, amount) {
+    function setBackgroundKillerWithDelay(limit, sumExpensesAndNewAmount) {
         setTimeout(function() {
-            setBackgroundKiller(leftToSpend, amount);
+            setBackgroundKiller(limit, sumExpensesAndNewAmount);
         }, 400);
     }
 
-    function setBackgroundKiller(leftToSpend, amount) {
-        if (leftToSpend < amount) {
+    function setBackgroundKiller(limit, sumExpensesAndNewAmount) {
+        if (limit < sumExpensesAndNewAmount) {
             $("#killerFeature").children().removeClass("bg-success");
             $("#killerFeature").children().addClass("bg-danger");
         } else {
             $("#killerFeature").children().removeClass("bg-danger");
             $("#killerFeature").children().addClass("bg-success");
         }
+    }
+
+    function isCurrentMonthExpense() {
+        let date = new Date();
+        let currentMonth = date.getMonth() + 1;
+        if (currentMonth < 10) currentMonth = "0" + currentMonth;
+        let currentYear = date.getFullYear();
+        let currentPeriod = currentYear + "-" + currentMonth;
+        let newExpensePeriod = ($('#date-to-fill').val()).replace(/...$/, "");
+        let isCurrentMonthExpense;
+
+        (currentPeriod === newExpensePeriod) ? isCurrentMonthExpense = true: isCurrentMonthExpense = false;
+
+        return isCurrentMonthExpense;
     }
 
 });
