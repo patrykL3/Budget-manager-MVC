@@ -742,7 +742,6 @@ class ExpenseDataManager extends \Core\Model
     public static function getKillerData()
     {
         $loggedUser = Authentication::getLoggedUser();
-
         $killerData = ExpenseDataManager::getUserExpenseCategories($loggedUser->user_id);
 
         foreach ($killerData as &$categoryKillerData) {
